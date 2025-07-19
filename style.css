@@ -9,15 +9,16 @@
   --button-bg: var(--main-color);
   --button-hover-bg: #2a7bcf;
   --card-bg: #fff;
-  --card-shadow: rgba(0,0,0,0.1);
-  --card-hover-shadow: rgba(0,0,0,0.2);
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: rgba(0, 0, 0, 0.2);
 }
 
 * {
   box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   font-family: "微软雅黑", sans-serif;
@@ -54,11 +55,10 @@ header {
   flex-direction: column;
   transition: transform 0.3s ease;
   z-index: 1000;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   /* 加个小内边距底部，方便放主题色选择 */
   padding-bottom: 60px;
 }
-
 
 #sidebar.hidden {
   transform: translateX(-220px);
@@ -84,21 +84,20 @@ header {
 
 #sidebar nav button:hover,
 #sidebar nav button.active {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 #main {
-  margin-left: 220px; /* 侧栏宽度 */
-  width: calc(100% - 220px);
+  margin: 20px auto;
+  width: 100%;
   max-width: 800px;
   padding: 2rem 1.5rem 1rem;
   overflow-y: auto;
   position: relative;
   background: #fff;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
-
 
 #topbar {
   display: flex;
@@ -153,17 +152,17 @@ header {
   border-radius: 25px;
   cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-  transition: background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
   margin-bottom: 1rem;
 }
 
 #toggleAddFormBtn:hover {
   background: var(--button-hover-bg);
-  box-shadow: 0 5px 10px rgba(0,0,0,0.25);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
 }
-
-
 
 /* 内容区域 */
 .page {
@@ -214,7 +213,6 @@ header {
   max-height: 200px; /* 根据内容长度调整 */
 }
 
-
 /* 表单 */
 form {
   margin-top: 1rem;
@@ -228,7 +226,7 @@ form label {
   font-weight: 600;
 }
 
-form input[type=text],
+form input[type="text"],
 form select,
 form textarea {
   width: 100%;
@@ -239,7 +237,7 @@ form textarea {
   resize: vertical;
 }
 
-form button[type=submit] {
+form button[type="submit"] {
   margin-top: 12px;
   background: var(--button-bg);
   color: white;
@@ -250,7 +248,7 @@ form button[type=submit] {
   transition: background 0.3s;
 }
 
-form button[type=submit]:hover {
+form button[type="submit"]:hover {
   background: var(--button-hover-bg);
 }
 
@@ -266,4 +264,51 @@ form button[type=submit]:hover {
   margin: 0 auto;
   width: 100%;
   position: relative;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+
+#searchInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+#searchInput:focus {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 圆形颜色选择按钮样式 */
+.color-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+}
+
+button {
+  font-size: 1rem;
 }
