@@ -189,14 +189,17 @@ header {
   margin: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  width: auto;         /* 宽度跟内容自动适应 */
-  min-width: 260px;    /* 保证卡片不会太窄 */
-  max-width: 420px;    /* 最大宽度 */
+  /* 让宽度只跟诗句决定，先移除max-width和min-width限制试试 */
+  width: auto; 
+  max-width: none; /* 取消最大宽度限制 */
+  min-width: 0;    /* 取消最小宽度限制 */
 
   white-space: normal;
   word-break: break-word;
-  text-align: center;
+  text-align: left;
   box-sizing: border-box;
+  position: relative; /* 为绝对定位的子元素做准备 */
+ vertical-align: top; /* 避免inline-block默认baseline对齐导致竖直方向的小偏差 */
 }
 
 .poem-line,
@@ -221,13 +224,21 @@ header {
 
 
 .poem-full {
+  position: absolute;
+  top: 100%; /* 放在卡片下方 */
+  left: 0;
+  width: 420px; /* 固定宽度，跟诗句最大宽度保持一致 */
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
   font-size: 0.9rem;
   color: #444;
   line-height: 1.8;
-  white-space: pre-wrap;
+  background: #f0f0f0;
+  padding: 8px;
+  border-radius: 0 0 12px 12px;
+  box-sizing: border-box;
+  z-index: 10;
 }
 
 .poem-full.expanded {
@@ -236,13 +247,12 @@ header {
 
 .poem-line {
   display: inline-block;
-  max-width: 380px; /* 比卡片最大宽度稍小，留出padding等空间 */
-  white-space: normal;
-  word-break: break-word;
   font-size: 1.25rem;
   font-weight: bold;
-  margin: 0 4px;
-  line-height: 1.6;
+  white-space: normal; /* 改为允许换行 */
+  max-width: 420px; /* 可设置最大宽度，防止超宽 */
+  overflow: hidden; /* 溢出隐藏 */
+  text-overflow: ellipsis; /* 超出显示省略号 */
 }
 
 .poem-actions {
