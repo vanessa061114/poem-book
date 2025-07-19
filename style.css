@@ -174,14 +174,18 @@ header {
 
 /* 诗句卡片 */
 .poem-card {
-  /* 移除 max-width: 90vw 的限制 */
-  padding: 12px 18px; /* 适当增加内边距，让内容更舒展 */
-  margin: 0; /* 移除默认margin，由容器的gap控制间距 */
+  /* 移除所有可能限制宽度的样式 */
+  padding: 12px 18px;
+  margin: 0;
   border-radius: 8px;
   box-shadow: 0 0 6px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: box-shadow 0.3s;
-  white-space: nowrap; /* 保持诗句在同一行（可选，根据需求调整） */
+  background: #fff; /* 增加背景色，让卡片更清晰 */
+  
+  /* 核心：让卡片成为"内联块"，宽度完全由内容决定 */
+  display: inline-block;
+  white-space: nowrap; /* 禁止卡片内文本换行（关键！） */
 }
 
 
@@ -190,18 +194,13 @@ header {
   box-shadow: 0 0 12px var(--card-hover-shadow);
 }
 
-.poem-line {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
 .poem-title {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 6px;
-  display: block;
-  white-space: normal; /* 允许换行 */
+  white-space: nowrap; /* 标题也不换行 */
+  overflow: hidden; /* 超长标题隐藏（避免影响卡片宽度） */
+  text-overflow: ellipsis; /* 超长标题显示省略号 */
 }
 
 .poem-full {
@@ -211,8 +210,8 @@ header {
   font-size: 0.9rem;
   color: #444;
   margin-top: 8px;
-  white-space: normal;
-  max-width: 280px;
+  white-space: normal; /* 全文允许换行 */
+  /* 移除 max-width 限制，跟随卡片宽度 */
 }
 
 
@@ -224,9 +223,8 @@ header {
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 6px;
-  /* 如果希望长诗句自动换行，保留以下设置；如果希望不换行，改为 white-space: nowrap */
-  white-space: normal; 
-  max-width: 300px; /* 限制最大宽度，避免过长 */
+  white-space: nowrap; /* 诗句不换行，强制单行显示 */
+  /* 移除 max-width 限制，让文本自然撑开宽度 */
 }
 
 
@@ -342,10 +340,10 @@ button {
 /* 诗句卡片容器 - 改为弹性布局，允许卡片自适应排列 */
 .poem-card-container {
   display: flex;
-  flex-wrap: wrap; /* 超出宽度时自动换行 */
+  flex-wrap: wrap; /* 超出一行时自动换行 */
   gap: 15px; /* 卡片之间的间距 */
   justify-content: center; /* 整体居中对齐 */
-  padding: 10px 0;
+  padding: 10px;
 }
 
 
