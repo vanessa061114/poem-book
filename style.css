@@ -232,6 +232,17 @@ header {
   line-height: 1.6;
 }
 
+.poem-actions {
+  margin-top: 8px;
+}
+
+.poem-actions button {
+  margin-right: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+
 /* 表单 */
 form {
   margin-top: 1rem;
