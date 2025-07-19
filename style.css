@@ -174,34 +174,35 @@ header {
 
 /* 诗句卡片 */
 .poem-card {
-  /* 移除所有可能限制宽度的样式 */
-  padding: 12px 18px;
-  margin: 0;
-  border-radius: 8px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   cursor: pointer;
-  transition: box-shadow 0.3s;
-  background: #fff; /* 增加背景色，让卡片更清晰 */
-  
-  /* 核心：让卡片成为"内联块"，宽度完全由内容决定 */
-  display: inline-block;
-  white-space: nowrap; /* 禁止卡片内文本换行（关键！） */
+  transition: all 0.3s ease;
+  background-color: white;
+  max-width: 100%; /* 防止卡片超出容器宽度 */
+  white-space: normal; /* 允许内容自然换行 */
 }
 
 
-
 .poem-card:hover {
-  box-shadow: 0 0 12px var(--card-hover-shadow);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .poem-title {
   font-size: 0.9rem;
   color: #666;
-  margin-bottom: 6px;
-  white-space: nowrap; /* 标题也不换行 */
-  overflow: hidden; /* 超长标题隐藏（避免影响卡片宽度） */
-  text-overflow: ellipsis; /* 超长标题显示省略号 */
+  margin-bottom: 8px;
+  white-space: nowrap; /* 标题不换行 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%; /* 确保标题在卡片宽度内 */
 }
+
 
 .poem-full {
   max-height: 0;
@@ -209,22 +210,22 @@ header {
   transition: max-height 0.3s ease;
   font-size: 0.9rem;
   color: #444;
-  margin-top: 8px;
-  white-space: normal; /* 全文允许换行 */
-  /* 移除 max-width 限制，跟随卡片宽度 */
+  line-height: 1.8;
+  width: 100%; /* 确保全文宽度与卡片一致 */
 }
-
 
 .poem-full.expanded {
   max-height: 500px;
+  margin-top: 8px;
 }
 
 .poem-line {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: bold;
-  margin-bottom: 6px;
-  white-space: nowrap; /* 诗句不换行，强制单行显示 */
-  /* 移除 max-width 限制，让文本自然撑开宽度 */
+  margin-bottom: 8px;
+  line-height: 1.6;
+  word-break: normal; /* 中文按词语换行 */
+  max-width: none; /* 移除最大宽度限制 */
 }
 
 
@@ -340,11 +341,12 @@ button {
 /* 诗句卡片容器 - 改为弹性布局，允许卡片自适应排列 */
 .poem-card-container {
   display: flex;
-  flex-wrap: wrap; /* 超出一行时自动换行 */
-  gap: 15px; /* 卡片之间的间距 */
-  justify-content: center; /* 整体居中对齐 */
-  padding: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
 }
+
 
 
 
