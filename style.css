@@ -189,17 +189,15 @@ header {
   margin: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  /* 让宽度只跟诗句决定，先移除max-width和min-width限制试试 */
-  width: auto;
-  max-width: none; /* 取消最大宽度限制 */
-  min-width: 0; /* 取消最小宽度限制 */
+  width: fit-content; /* ✅ 自动宽度，跟诗句走 */
+  max-width: 90vw;    /* ✅ 防止太宽超出屏幕 */
 
   white-space: normal;
   word-break: break-word;
   text-align: left;
   box-sizing: border-box;
-  position: relative; /* 为绝对定位的子元素做准备 */
-  vertical-align: top; /* 避免inline-block默认baseline对齐导致竖直方向的小偏差 */
+  position: relative;
+  vertical-align: top;
 }
 
 .poem-line,
@@ -223,27 +221,24 @@ header {
 }
 
 .poem-full {
-   text-align: left;
-  position: relative; /* 改为相对定位 */
-  width: 100%;        /* 宽度跟随卡片 */
+  text-align: left;
+  white-space: pre-wrap;      /* ✅ 支持换行和空格 */
+  word-break: break-word;
+  width: 100%;                /* ✅ 不扩宽，跟随卡片 */
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
-  box-sizing: border-box;
-  padding: 0; /* 默认无内边距 */
-  margin: 8px auto 0 auto; /* 上方8px间距，左右自动居中 */
-  background: transparent; /* 或者改成和卡片背景一致 */
-  /* 如果要完全去掉阴影和边框，也确保没有其他box-shadow */
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0;
+  margin-top: 8px;
   box-shadow: none;
-  border-radius: 0;
+  background: transparent;
 }
 
 .poem-full.expanded {
-    padding: 8px 8px 20px 8px; /* 上右下左 */
-  max-height: none;  /* 取消高度限制 */
-  margin-top: 8px;
-  overflow: visible; /* 确保显示完整 */
-  line-height: 1.5;  /* 保证行高 */
+  max-height: 1000px;        /* ✅ 足够大，展示完整内容 */
+  padding: 6px 0 0 0;
+  line-height: 1.5;
+  overflow: visible;
 }
 
 .poem-full, .poem-full.expanded {
@@ -255,10 +250,10 @@ header {
   display: inline-block;
   font-size: 1.25rem;
   font-weight: bold;
-  white-space: normal; /* 改为允许换行 */
-  max-width: 420px; /* 可设置最大宽度，防止超宽 */
-  overflow: hidden; /* 溢出隐藏 */
-  text-overflow: ellipsis; /* 超出显示省略号 */
+  white-space: normal;     /* ✅ 允许换行 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;         /* ✅ 继承卡片宽度限制 */
 }
 
 .poem-actions {
