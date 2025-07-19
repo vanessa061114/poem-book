@@ -187,13 +187,6 @@ header {
 }
 
 
-.poem-line, .poem-title {
-  white-space: nowrap;
-  display: inline-block;
-  text-align: center;
-}
-
-
 .poem-card:hover {
   box-shadow: 0 0 12px var(--card-hover-shadow);
 }
