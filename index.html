@@ -493,13 +493,60 @@
     </script>
     <script>
       const themeColorSelect = document.getElementById("themeColor");
-      themeColorSelect.addEventListener("change", function () {
-        document.documentElement.style.setProperty(
-          "--main-color",
-          themeColorSelect.value,
-        );
 
-        document.documentElement.style.setProperty("--main-color", this.value);
+      // 不同主题对应的一组颜色变量
+      const themePresets = {
+        "#3498db": {
+          "--header-bg": "#3498db",
+          "--button-bg": "#3498db",
+          "--button-hover-bg": "#2c80b4",
+          "--card-hover-shadow": "#3498db",
+        },
+        "#e74c3c": {
+          "--header-bg": "#e74c3c",
+          "--button-bg": "#e74c3c",
+          "--button-hover-bg": "#c0392b",
+          "--card-hover-shadow": "#e74c3c",
+        },
+        "#2ecc71": {
+          "--header-bg": "#2ecc71",
+          "--button-bg": "#2ecc71",
+          "--button-hover-bg": "#27ae60",
+          "--card-hover-shadow": "#2ecc71",
+        },
+        "#9b59b6": {
+          "--header-bg": "#9b59b6",
+          "--button-bg": "#9b59b6",
+          "--button-hover-bg": "#8e44ad",
+          "--card-hover-shadow": "#9b59b6",
+        },
+        "#f39c12": {
+          "--header-bg": "#f39c12",
+          "--button-bg": "#f39c12",
+          "--button-hover-bg": "#d35400",
+          "--card-hover-shadow": "#f39c12",
+        },
+      };
+
+      themeColorSelect.addEventListener("change", function () {
+        const selected = this.value;
+        const theme = themePresets[selected];
+        if (theme) {
+          for (const [key, value] of Object.entries(theme)) {
+            document.documentElement.style.setProperty(key, value);
+          }
+        }
+      });
+
+      // 页面加载时应用当前选中的主题
+      window.addEventListener("DOMContentLoaded", () => {
+        const selected = themeColorSelect.value;
+        const theme = themePresets[selected];
+        if (theme) {
+          for (const [key, value] of Object.entries(theme)) {
+            document.documentElement.style.setProperty(key, value);
+          }
+        }
       });
     </script>
   </body>
