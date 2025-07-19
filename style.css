@@ -241,12 +241,17 @@ header {
 }
 
 .poem-full.expanded {
+    padding: 8px 8px 20px 8px; /* 上右下左 */
   max-height: none;  /* 取消高度限制 */
-  padding: 8px;
   margin-top: 8px;
   overflow: visible; /* 确保显示完整 */
   line-height: 1.5;  /* 保证行高 */
-    padding-bottom: 15px;  /* 比普通padding更大点 */
+}
+
+.poem-full, .poem-full.expanded {
+  width: 100%;
+  max-width: 380px; /* 或和未展开的行宽保持一致 */
+  box-sizing: border-box;
 }
 
 .poem-line {
