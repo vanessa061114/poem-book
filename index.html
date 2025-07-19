@@ -1,72 +1,84 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>我的诗句收藏</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: "微软雅黑", sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
-    header {
-      background-color: #333;
-      color: #fff;
-      padding: 1em;
-      text-align: center;
-    }
-    .poem-list {
+      font-family: sans-serif;
+      background: #fffbe6;
+      color: #333;
       padding: 20px;
     }
-    .poem-item {
-      background: #fff;
-      padding: 15px;
+    .poem-card {
+      border: 1px solid #ccc;
       border-radius: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      cursor: pointer;
+      padding: 15px;
+      margin: 10px 0;
+      background-color: #fff;
     }
-    .poem-detail {
-      display: none;
-      white-space: pre-wrap;
+    button {
       margin-top: 10px;
-      color: #555;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>我的诗句收藏</h1>
-  </header>
-  <div class="poem-list">
-    <!-- 示例诗句 -->
-    <div class="poem-item" onclick="togglePoem(this)">
-      <strong>1. 沉舟侧畔千帆过</strong>
-      <div class="poem-detail">
-        沉舟侧畔千帆过，病树前头万木春。<br>
-        ——刘禹锡《酬乐天扬州初逢席上见赠》
-      </div>
-    </div>
+  <h1>我的诗句收藏册 ✨</h1>
+  <form id="poemForm">
+    <label>诗句：
+      <input type="text" id="line" required />
+    </label><br/>
+    <label>原诗标题：
+      <input type="text" id="title" required />
+    </label><br/>
+    <label>原诗内容：
+      <textarea id="full" rows="5" required></textarea>
+    </label><br/>
+    <button type="submit">添加收藏</button>
+  </form>
 
-    <div class="poem-item" onclick="togglePoem(this)">
-      <strong>2. 此情可待成追忆</strong>
-      <div class="poem-detail">
-        此情可待成追忆，只是当时已惘然。<br>
-        ——李商隐《锦瑟》
-      </div>
-    </div>
-    
-    <!-- 你可以自己继续添加 -->
-  </div>
+  <h2>已收藏的诗句：</h2>
+  <div id="poemList"></div>
 
   <script>
-    function togglePoem(item) {
-      const detail = item.querySelector('.poem-detail');
-      detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+    const form = document.getElementById("poemForm");
+    const poemList = document.getElementById("poemList");
+    let poems = JSON.parse(localStorage.getItem("poems") || "[]");
+
+    function renderPoems() {
+      poemList.innerHTML = "";
+      poems.forEach((p, i) => {
+        const card = document.createElement("div");
+        card.className = "poem-card";
+        card.innerHTML = `
+          <strong>${p.line}</strong><br/>
+          <em>${p.title}</em><br/>
+          <button onclick="alert('${p.full.replace(/\n/g, "\\n")}')">查看原诗</button>
+          <button onclick="deletePoem(${i})">删除</button>
+        `;
+        poemList.appendChild(card);
+      });
     }
+
+    function deletePoem(index) {
+      poems.splice(index, 1);
+      localStorage.setItem("poems", JSON.stringify(poems));
+      renderPoems();
+    }
+
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const line = document.getElementById("line").value;
+      const title = document.getElementById("title").value;
+      const full = document.getElementById("full").value;
+      poems.push({ line, title, full });
+      localStorage.setItem("poems", JSON.stringify(poems));
+      renderPoems();
+      form.reset();
+    };
+
+    renderPoems();
   </script>
 </body>
 </html>
-
