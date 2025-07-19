@@ -235,10 +235,15 @@ header {
 }
 
 .poem-full.expanded {
-  max-height: 1000px;        /* ✅ 足够大，展示完整内容 */
-  padding: 6px 0 0 0;
+  display: block;
+  max-height: none;           /* ✅ 不限制高度 */
+  padding-top: 6px;
   line-height: 1.5;
   overflow: visible;
+  white-space: pre-wrap;
+  word-break: break-word;
+  width: 100%;                /* ✅ 限制在卡片内部 */
+  box-sizing: border-box;
 }
 
 .poem-full,
