@@ -20,12 +20,16 @@
     .search-bar {
       margin-bottom: 20px;
     }
-    input[type="text"] {
+    input[type="text"], textarea, select {
       width: 100%;
       padding: 8px;
       font-size: 16px;
       border-radius: 6px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      resize: vertical;
     }
     .category-filter {
       margin-bottom: 20px;
@@ -74,6 +78,33 @@
       padding-top: 10px;
       color: #444;
     }
+    form#addPoemForm {
+      background: #fff9d6;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 6px #ffd54f;
+      margin-top: 30px;
+    }
+    form#addPoemForm label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    form#addPoemForm button {
+      background: #ffa000;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 16px;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+    form#addPoemForm button:hover {
+      background: #ff6f00;
+    }
   </style>
 </head>
 <body>
@@ -96,9 +127,39 @@
 
   <div id="poemList"></div>
 
+  <!-- 新增诗句表单 -->
+  <form id="addPoemForm">
+    <h2>添加新诗句</h2>
+    <label for="newLine">诗句摘录</label>
+    <input type="text" id="newLine" required placeholder="请输入你喜欢的诗句" />
+
+    <label for="newTitle">原诗标题</label>
+    <input type="text" id="newTitle" required placeholder="原诗名称" />
+
+    <label for="newAuthor">作者</label>
+    <input type="text" id="newAuthor" required placeholder="诗歌作者" />
+
+    <label for="newCategory">分类</label>
+    <select id="newCategory" required>
+      <option value="">请选择分类</option>
+      <option value="抒情">抒情</option>
+      <option value="山水">山水</option>
+      <option value="思乡">思乡</option>
+      <option value="爱情">爱情</option>
+    </select>
+
+    <label for="newFull">全文</label>
+    <textarea id="newFull" rows="5" required placeholder="输入完整诗文"></textarea>
+
+    <button type="submit">添加诗句</button>
+  </form>
+
   <script>
-    // 诗句数据示例，包含分类
-    const poems = [
+    // 读取本地存储或初始化
+    let poems = JSON.parse(localStorage.getItem("poems") || "[]");
+
+    // 诗句初始数据（如果第一次打开本地没有数据就添加）
+    const initialPoems = [
       {
         id: 1,
         line: "欲穷千里目，更上一层楼",
@@ -114,28 +175,19 @@
         author: "李白",
         category: "抒情",
         full: "君不见黄河之水天上来，奔流到海不复回……"
-      },
-      {
-        id: 3,
-        line: "床前明月光，疑是地上霜",
-        title: "静夜思",
-        author: "李白",
-        category: "思乡",
-        full: "床前明月光，疑是地上霜。举头望明月，低头思故乡。"
-      },
-      {
-        id: 4,
-        line: "山有木兮木有枝，心悦君兮君不知",
-        title: "越人歌",
-        author: "佚名",
-        category: "爱情",
-        full: "山有木兮木有枝，心悦君兮君不知。"
       }
     ];
+
+    // 如果 localStorage 里没有数据，赋值初始数据
+    if (poems.length === 0) {
+      poems = initialPoems;
+      localStorage.setItem("poems", JSON.stringify(poems));
+    }
 
     const poemList = document.getElementById("poemList");
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
+
     let currentCategory = "all";
 
     // 渲染诗句列表
@@ -180,10 +232,10 @@
       }
     }
 
-    // 监听搜索输入框变化
+    // 搜索框监听
     searchInput.addEventListener("input", renderPoems);
 
-    // 监听分类按钮点击
+    // 分类按钮监听
     categoryFilter.querySelectorAll("button").forEach(btn => {
       btn.addEventListener("click", () => {
         categoryFilter.querySelectorAll("button").forEach(b => b.classList.remove("active"));
@@ -193,8 +245,21 @@
       });
     });
 
-    // 初次渲染
-    renderPoems();
-  </script>
-</body>
-</html>
+    // 添加新诗句表单处理
+    const addPoemForm = document.getElementById("addPoemForm");
+
+    addPoemForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const newLine = document.getElementById("newLine").value.trim();
+      const newTitle = document.getElementById("newTitle").value.trim();
+      const newAuthor = document.getElementById("newAuthor").value.trim();
+      const newCategory = document.getElementById("newCategory").value;
+      const newFull = document.getElementById("newFull").value.trim();
+
+      if (!newLine || !newTitle || !newAuthor || !newCategory || !newFull) {
+        alert("请填写所有字段！");
+        return;
+      }
+
+      // 生成新id
+      const newId = poems.length > 0 ? Math.max(...poems.map
