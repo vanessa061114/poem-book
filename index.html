@@ -9,7 +9,7 @@
   <body>
     <div class="content-wrapper">
       <button id="toggleSidebarBtn" aria-label="切换侧栏">☰</button>
-      
+
       <div id="sidebar" class="hidden">
         <h2>菜单</h2>
         <nav>
@@ -29,7 +29,7 @@
           <option value="#f39c12">橘子黄</option>
         </select>
 
-        <!-- 也可以用颜色按钮 -->
+        <!-- 颜色按钮 -->
         <div
           id="themeSelector"
           style="margin-top: auto; display: flex; gap: 8px; padding-top: 1rem"
@@ -66,35 +66,50 @@
       <div id="main">
         <section id="home" class="page active">
           <input type="text" id="searchInput" placeholder="搜索诗句或作者..." />
-          <button id="toggleAddFormBtn">添加新诗句</button>
 
-          <form id="addPoemForm" style="display: none">
-            <label for="newLine">诗句摘录</label>
-            <input
-              type="text"
-              id="newLine"
-              required
-              placeholder="请输入你喜欢的诗句"
-            />
-            <label for="newTitle">原诗标题</label>
-            <input type="text" id="newTitle" required placeholder="原诗名称" />
-            <label for="newAuthor">作者</label>
-            <input type="text" id="newAuthor" required placeholder="诗歌作者" />
-            <label for="newCategory">分类</label>
-            <select id="newCategory" required>
-              <option disabled selected>请选择分类</option>
-            </select>
-            <label for="newFull">全文</label>
-            <textarea
-              id="newFull"
-              rows="4"
-              required
-              placeholder="输入完整诗文"
-            ></textarea>
-            <button type="submit">添加诗句</button>
-          </form>
+          <div class="container">
+            <div class="button-container">
+              <button id="toggleAddFormBtn">添加新诗句</button>
+            </div>
 
-          <div id="poemList"></div>
+            <form id="addPoemForm" style="display: none">
+              <label for="newLine">诗句摘录</label>
+              <input
+                type="text"
+                id="newLine"
+                required
+                placeholder="请输入你喜欢的诗句"
+              />
+              <label for="newTitle">原诗标题</label>
+              <input
+                type="text"
+                id="newTitle"
+                required
+                placeholder="原诗名称"
+              />
+              <label for="newAuthor">作者</label>
+              <input
+                type="text"
+                id="newAuthor"
+                required
+                placeholder="诗歌作者"
+              />
+              <label for="newCategory">分类</label>
+              <select id="newCategory" required>
+                <option disabled selected>请选择分类</option>
+              </select>
+              <label for="newFull">全文</label>
+              <textarea
+                id="newFull"
+                rows="4"
+                required
+                placeholder="输入完整诗文"
+              ></textarea>
+              <button type="submit">添加诗句</button>
+            </form>
+
+            <div id="poemList" class="poem-card-container"></div>
+          </div>
         </section>
 
         <section id="categories" class="page">
