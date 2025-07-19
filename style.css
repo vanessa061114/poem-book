@@ -241,7 +241,6 @@ header {
 .poem-full.expanded {
   display: block;
   max-height: none;
-  width: 100%;       /* ✅ 不撑开卡片宽度 */
   max-width: 100%;              /* ✅ 限制在卡片内部 */
   overflow: visible;
   white-space: pre-wrap;
