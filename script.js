@@ -1,21 +1,4 @@
-// 数据初始化
-let poems = JSON.parse(localStorage.getItem("poems")) || [
-  {
-    id: 1,
-    line: "床前明月光",
-    title: "静夜思",
-    author: "李白",
-    category: "抒情",
-    full: "床前明月光，疑是地上霜。\n举头望明月，低头思故乡。",
-  },
-];
-let categories = JSON.parse(localStorage.getItem("categories")) || [
-  "抒情",
-  "山水",
-  "思乡",
-  "爱情",
-];
-
+let poems = JSON.parse(localStorage.getItem("poems")) || [];
 // 页面元素
 const sidebar = document.getElementById("sidebar");
 const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
