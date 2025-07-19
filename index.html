@@ -5,226 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>我的诗句收藏</title>
     <style>
+      :root {
+        --bg-color: #fffbe6;
+        --text-color: #333333;
+        --header-bg: #ffd54f;
+        --header-text: #333333;
+        --button-bg: #ffa000;
+        --button-hover-bg: #ff6f00;
+        --card-bg: #ffffff;
+        --card-shadow: #ccc;
+        --card-hover-shadow: #ffca28;
+      }
+
       /* 重置及基础 */
       * {
         box-sizing: border-box;
       }
 
       body {
-        margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: #fffbe6;
-        color: #333;
-        overflow-x: hidden;
-        /* 防止横向滚动 */
+        background: var(--bg-color);
+        color: var(--text-color);
       }
 
-      /* 顶部菜单栏 */
       header {
-        background: #ffd54f;
-        padding: 10px 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        background: var(--header-bg);
+        color: var(--header-text);
       }
 
-      #menuBtn {
-        font-size: 24px;
-        cursor: pointer;
-        background: none;
-        border: none;
-        user-select: none;
+      /* 按钮背景 */
+      #toggleAddFormBtn,
+      #addPoemForm button[type="submit"] {
+        background: var(--button-bg);
+        color: white;
       }
 
-      header h1 {
-        margin: 0;
-        font-size: 1.5rem;
-        flex-grow: 1;
-        text-align: center;
+      #toggleAddFormBtn:hover,
+      #addPoemForm button[type="submit"]:hover {
+        background: var(--button-hover-bg);
       }
 
-      /* 侧边栏抽屉 */
-      #drawer {
-        position: fixed;
-        top: 0;
-        left: -250px;
-        width: 250px;
-        height: 100vh;
-        background: #fff9d6;
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-        padding: 20px;
-        transition: left 0.3s ease;
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
-      }
-
-      #drawer.open {
-        left: 0;
-      }
-
-      #drawer h2 {
-        margin-top: 0;
-        margin-bottom: 1rem;
-      }
-
-      #drawer nav button {
-        background: none;
-        border: none;
-        padding: 10px;
-        text-align: left;
-        width: 100%;
-        font-size: 1rem;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-bottom: 5px;
-        transition: background-color 0.2s;
-      }
-
-      #drawer nav button:hover,
-      #drawer nav button.active {
-        background-color: #ffd54f;
-      }
-
-      /* 主体内容区域 */
-      main {
-        padding: 20px;
-        max-width: 600px;
-        margin: 0 auto;
-        transition: margin-left 0.3s ease;
-      }
-
-      main.shifted {
-        margin-left: 250px;
-      }
-
-      /* 搜索框 */
-      .search-bar {
-        margin-bottom: 20px;
-        width: 100%;
-        padding: 8px;
-        font-size: 16px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-      }
-
-      /* 诗句卡片 */
+      /* 诗句卡片背景和阴影 */
       .poem-card {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 0 6px #ccc;
-        padding: 15px;
-        margin-bottom: 15px;
-        cursor: pointer;
-        transition: box-shadow 0.3s;
+        background: var(--card-bg);
+        box-shadow: 0 0 6px var(--card-shadow);
       }
 
       .poem-card:hover {
-        box-shadow: 0 0 10px #ffca28;
+        box-shadow: 0 0 10px var(--card-hover-shadow);
       }
 
-      .poem-line {
-        font-weight: bold;
-        font-size: 18px;
-      }
-
-      .poem-title {
-        font-style: italic;
-        color: #666;
-        margin-top: 6px;
-      }
-
-      .poem-full {
-        margin-top: 10px;
-        white-space: pre-wrap;
-        display: none;
-        border-top: 1px solid #eee;
-        padding-top: 10px;
-        color: #444;
-      }
-
-      /* 折叠表单按钮 */
-      #toggleAddFormBtn {
-        background: #ffa000;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-bottom: 10px;
-        font-size: 16px;
-        width: 100%;
-        transition: background-color 0.3s;
-      }
-
-      #toggleAddFormBtn:hover {
-        background: #ff6f00;
-      }
-
-      /* 添加诗句表单 - 默认隐藏 */
-      #addPoemForm {
-        background: #fff9d6;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 0 6px #ffd54f;
-        margin-bottom: 30px;
-        display: none;
-      }
-
-      #addPoemForm label {
-        font-weight: bold;
-        display: block;
-        margin-top: 10px;
-      }
-
-      #addPoemForm input[type="text"],
-      #addPoemForm select,
-      #addPoemForm textarea {
-        width: 100%;
-        padding: 8px;
-        font-size: 16px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        margin-top: 5px;
-        margin-bottom: 15px;
-        resize: vertical;
-        box-sizing: border-box;
-      }
-
-      #addPoemForm button[type="submit"] {
-        background: #ffa000;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 16px;
-        width: 100%;
-        transition: background-color 0.3s;
-      }
-
-      #addPoemForm button[type="submit"]:hover {
-        background: #ff6f00;
-      }
-
-      /* 作者列表 */
-      #authorList {
-        margin-top: 10px;
-      }
-
-      #authorList div {
-        padding: 8px;
-        background: white;
-        border-radius: 6px;
-        margin-bottom: 6px;
-        cursor: pointer;
-        box-shadow: 0 0 5px #ccc;
-        transition: background-color 0.2s;
-      }
-
-      #authorList div:hover {
-        background: #ffd54f;
-        color: white;
+      /* 侧边栏背景 */
+      #drawer {
+        background: var(--bg-color);
       }
     </style>
   </head>
