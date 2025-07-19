@@ -244,9 +244,22 @@ header {
 
 .poem-actions button {
   margin-right: 8px;
-  padding: 4px 8px;
+  padding: 6px 12px;
   cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  color: white;
+  background-color: var(--button-bg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
+.poem-actions button:hover {
+  background-color: var(--button-hover-bg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 
 /* 表单 */
 form {
