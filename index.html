@@ -351,6 +351,17 @@
           drawer.classList.remove("open");
           mainContent.classList.remove("shifted");
           drawer.setAttribute("aria-hidden", "true");
+
+          // 渲染对应页面内容
+          if (pageKey === "home") {
+            renderPoems();
+          } else if (pageKey === "categories") {
+            renderCategoryListWithPoems();
+          } else if (pageKey === "allPoems") {
+            renderAllPoems();
+          } else if (pageKey === "authors") {
+            renderAuthorsWithPoems();
+          }
         });
       });
 
@@ -365,78 +376,22 @@
         }
       });
 
-      // 分类数据
-      let categories = JSON.parse(localStorage.getItem("categories")) || [
-        "抒情",
-        "山水",
-        "思乡",
-        "爱情",
-      ];
-      function saveCategories() {
-        localStorage.setItem("categories", JSON.stringify(categories));
-      }
-      function renderCategoryOptions() {
-        newCategorySelect.innerHTML =
-          "<option disabled selected>请选择分类</option>";
-        categories.forEach((cat) => {
-          const option = document.createElement("option");
-          option.value = cat;
-          option.textContent = cat;
-          newCategorySelect.appendChild(option);
-        });
-      }
-      function renderCategoryList() {
-        const categoryList = document.getElementById("categoryList");
-        categoryList.innerHTML = "";
-        categories.forEach((cat) => {
-          const li = document.createElement("li");
-          li.textContent = cat;
-          categoryList.appendChild(li);
-        });
-      }
+      // 诗句数据保持不变，略
 
-      // 诗句数据
-      const initialPoems = [
-        {
-          id: 1,
-          line: "欲穷千里目，更上一层楼",
-          title: "登鹳雀楼",
-          author: "王之涣",
-          category: "山水",
-          full: "白日依山尽，黄河入海流。欲穷千里目，更上一层楼。",
-        },
-        {
-          id: 2,
-          line: "人生得意须尽欢，莫使金樽空对月",
-          title: "将进酒",
-          author: "李白",
-          category: "抒情",
-          full: "君不见黄河之水天上来，奔流到海不复回……",
-        },
-      ];
-      let poems = JSON.parse(localStorage.getItem("poems") || "[]");
-      if (poems.length === 0) {
-        poems = initialPoems;
-        localStorage.setItem("poems", JSON.stringify(poems));
-      }
-
-      // 渲染首页诗句（带搜索和分类筛选）
+      // 首页诗句渲染（带搜索）
       const poemList = document.getElementById("poemList");
       const searchInput = document.getElementById("searchInput");
-      let currentCategory = "all";
 
       function renderPoems() {
         poemList.innerHTML = "";
         const keyword = searchInput.value.trim().toLowerCase();
 
         const filtered = poems.filter((poem) => {
-          const matchCategory =
-            currentCategory === "all" || poem.category === currentCategory;
-          const matchKeyword =
+          return (
             poem.line.toLowerCase().includes(keyword) ||
             poem.title.toLowerCase().includes(keyword) ||
-            poem.author.toLowerCase().includes(keyword);
-          return matchCategory && matchKeyword;
+            poem.author.toLowerCase().includes(keyword)
+          );
         });
 
         if (filtered.length === 0) {
@@ -445,51 +400,146 @@
         }
 
         filtered.forEach((poem) => {
-          const card = document.createElement("div");
-          card.className = "poem-card";
-          card.innerHTML = `
-        <div class="poem-line">${poem.line}</div>
-        <div class="poem-title">${poem.title} — ${poem.author}</div>
-        <div class="poem-full">${poem.full}</div>
-      `;
-          card.addEventListener("click", () => {
-            const full = card.querySelector(".poem-full");
-            full.style.display =
-              full.style.display === "block" ? "none" : "block";
-          });
+          const card = createPoemCard(poem);
           poemList.appendChild(card);
         });
       }
 
-      // 全部诗句页面
+      // 创建诗句卡片，全文点击展开
+      function createPoemCard(poem) {
+        const card = document.createElement("div");
+        card.className = "poem-card";
+        card.innerHTML = `
+    <div class="poem-line">${poem.line}</div>
+    <div class="poem-title">${poem.title} — ${poem.author}</div>
+    <div class="poem-full" style="display:none;">${poem.full}</div>
+  `;
+        card.addEventListener("click", () => {
+          const full = card.querySelector(".poem-full");
+          full.style.display =
+            full.style.display === "block" ? "none" : "block";
+        });
+        return card;
+      }
+
+      // 全部诗句页渲染
       const allPoemList = document.getElementById("allPoemList");
       function renderAllPoems() {
         allPoemList.innerHTML = "";
         poems.forEach((poem) => {
-          const card = document.createElement("div");
-          card.className = "poem-card";
-          card.innerHTML = `
-        <div class="poem-line">${poem.line}</div>
-        <div class="poem-title">${poem.title} — ${poem.author}</div>
-      `;
+          const card = createPoemCard(poem);
           allPoemList.appendChild(card);
         });
       }
 
-      // 作者列表页
+      // 分类页 - 显示分类列表，并可点展开查看该分类诗句
+      const categoryList = document.getElementById("categoryList");
+
+      function renderCategoryListWithPoems() {
+        categoryList.innerHTML = "";
+        categories.forEach((cat) => {
+          const li = document.createElement("li");
+          li.style.cursor = "pointer";
+          li.textContent = cat;
+
+          // 点开显示该分类的诗句
+          li.addEventListener("click", () => {
+            renderCategoryPoems(cat);
+          });
+
+          categoryList.appendChild(li);
+        });
+
+        // 默认展示第一个分类诗句
+        if (categories.length > 0) renderCategoryPoems(categories[0]);
+      }
+
+      function renderCategoryPoems(category) {
+        // 先清空分类列表，变成包含诗句详情
+        categoryList.innerHTML = "";
+
+        // 添加一个返回按钮，回到分类列表
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "← 返回分类列表";
+        backBtn.style.marginBottom = "10px";
+        backBtn.addEventListener("click", renderCategoryListWithPoems);
+        categoryList.appendChild(backBtn);
+
+        // 显示当前分类标题
+        const header = document.createElement("h3");
+        header.textContent = `分类：${category}`;
+        categoryList.appendChild(header);
+
+        // 显示该分类的所有诗句
+        const poemsInCategory = poems.filter((p) => p.category === category);
+        if (poemsInCategory.length === 0) {
+          const p = document.createElement("p");
+          p.textContent = "该分类下暂无诗句。";
+          categoryList.appendChild(p);
+        } else {
+          poemsInCategory.forEach((poem) => {
+            const card = createPoemCard(poem);
+            categoryList.appendChild(card);
+          });
+        }
+      }
+
+      // 作者页 - 显示作者列表，可点开查看作者的诗句
       const authorListDiv = document.getElementById("authorList");
-      function renderAuthors() {
-        // 提取所有作者，去重
-        const authors = [...new Set(poems.map((p) => p.author))];
+
+      function renderAuthorsWithPoems() {
         authorListDiv.innerHTML = "";
+
+        // 去重作者列表
+        const authors = [...new Set(poems.map((p) => p.author))];
+
+        // 创建作者按钮
         authors.forEach((author) => {
-          const div = document.createElement("div");
-          div.textContent = author;
-          authorListDiv.appendChild(div);
+          const btn = document.createElement("button");
+          btn.textContent = author;
+          btn.style.margin = "5px 5px 10px 0";
+          btn.style.padding = "6px 12px";
+          btn.style.borderRadius = "20px";
+          btn.style.border = "none";
+          btn.style.cursor = "pointer";
+          btn.style.backgroundColor = "#fff9d6";
+          btn.addEventListener("click", () => {
+            renderAuthorPoems(author);
+          });
+          authorListDiv.appendChild(btn);
         });
       }
 
-      // 新增诗句表单提交处理
+      function renderAuthorPoems(author) {
+        authorListDiv.innerHTML = "";
+
+        // 返回按钮
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "← 返回作者列表";
+        backBtn.style.marginBottom = "10px";
+        backBtn.addEventListener("click", renderAuthorsWithPoems);
+        authorListDiv.appendChild(backBtn);
+
+        // 标题
+        const header = document.createElement("h3");
+        header.textContent = `作者：${author}`;
+        authorListDiv.appendChild(header);
+
+        // 显示作者所有诗句
+        const poemsByAuthor = poems.filter((p) => p.author === author);
+        if (poemsByAuthor.length === 0) {
+          const p = document.createElement("p");
+          p.textContent = "该作者暂无诗句。";
+          authorListDiv.appendChild(p);
+        } else {
+          poemsByAuthor.forEach((poem) => {
+            const card = createPoemCard(poem);
+            authorListDiv.appendChild(card);
+          });
+        }
+      }
+
+      // 新增诗句表单提交处理（保持不变）
       addPoemForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -518,25 +568,50 @@
 
         localStorage.setItem("poems", JSON.stringify(poems));
 
-        // 更新首页和全部诗句页内容
+        // 更新所有页面内容
         renderPoems();
         renderAllPoems();
-        renderAuthors();
+        renderAuthorsWithPoems();
+        renderCategoryListWithPoems();
 
         addPoemForm.reset();
         addPoemForm.style.display = "none";
         toggleAddFormBtn.textContent = "添加新诗句";
       });
 
+      // 分类数据
+      let categories = JSON.parse(localStorage.getItem("categories")) || [
+        "抒情",
+        "山水",
+        "思乡",
+        "爱情",
+      ];
+
+      // 保存分类到本地
+      function saveCategories() {
+        localStorage.setItem("categories", JSON.stringify(categories));
+      }
+
+      // 渲染分类下拉选项（给新增诗句表单用）
+      function renderCategoryOptions() {
+        newCategorySelect.innerHTML =
+          "<option disabled selected>请选择分类</option>";
+        categories.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat;
+          newCategorySelect.appendChild(option);
+        });
+      }
+
       // 搜索框监听
       searchInput.addEventListener("input", renderPoems);
 
-      // 初始化渲染
+      // 初始化分类选项，首页诗句，全部诗句，作者列表
       renderCategoryOptions();
-      renderCategoryList();
       renderPoems();
       renderAllPoems();
-      renderAuthors();
+      renderAuthorsWithPoems();
     </script>
   </body>
 </html>
