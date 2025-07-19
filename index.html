@@ -11,7 +11,6 @@
       <button id="toggleSidebarBtn" aria-label="切换侧栏">☰</button>
 
       <div id="sidebar" class="hidden">
-        <h2>菜单</h2>
         <nav>
           <button data-page="home" class="active">首页</button>
           <button data-page="categories">分类</button>
@@ -100,10 +99,7 @@
             <button type="submit">添加诗句</button>
           </form>
 
-          <div class="poem-card">
-  <div class="line">欲穷千里目，更上一层楼</div>
-  <div class="author">——《登鹳雀楼》 王之涣</div>
-</div>
+          <div id="poemList" class="poem-card-container"></div>
         </section>
 
         <section id="categories" class="page">
