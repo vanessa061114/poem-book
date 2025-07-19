@@ -174,20 +174,17 @@ header {
 
 /* 诗句卡片 */
 .poem-card {
-  display: inline-block;    /* ✅ 每张卡片宽度根据内容自适应 */
-  background: var(--card-bg);
-  box-shadow: 0 0 6px var(--card-shadow);
-  padding: 10px 15px;
+  display: inline-block;     /* 让卡片宽度跟内容匹配 */
+  padding: 8px 12px;
   margin: 10px;
   border-radius: 6px;
+  box-shadow: 0 0 6px var(--card-shadow);
   cursor: pointer;
   transition: box-shadow 0.3s;
-  vertical-align: top;
-  word-break: break-word;
-
-  min-width: 120px;         /* 可选，限制最小宽度避免太窄 */
-  max-width: 400px;         /* 可选，限制最长句不撑满一行 */
+  white-space: normal;
+  max-width: 350px;    /* 超过这个宽度自动换行 */
 }
+
 
 
 
@@ -222,6 +219,9 @@ header {
   max-height: 500px; /* or more if needed */
 }
 
+.poem-line {
+  text-align: center;
+}
 
 
 /* 表单 */
