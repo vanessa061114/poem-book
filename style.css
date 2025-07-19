@@ -189,7 +189,7 @@ header {
   margin: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  width: fit-content; /* ✅ 自动宽度，跟诗句走 */
+  width: max-content; 
   max-width: 90vw;    /* ✅ 防止太宽超出屏幕 */
 
   white-space: normal;
@@ -236,13 +236,14 @@ header {
 
 .poem-full.expanded {
   display: block;
-  max-height: none;           /* ✅ 不限制高度 */
-  padding-top: 6px;
-  line-height: 1.5;
+  max-height: none;
+  width: 100%;       /* ✅ 不撑开卡片宽度 */
+  max-width: 100%;              /* ✅ 限制在卡片内部 */
   overflow: visible;
   white-space: pre-wrap;
   word-break: break-word;
-  width: 100%;                /* ✅ 限制在卡片内部 */
+  line-height: 1.5;
+  padding-top: 6px;
   box-sizing: border-box;
 }
 
@@ -250,6 +251,8 @@ header {
 .poem-full.expanded {
   width: 100%;       /* ✅ 跟随卡片宽度 */
   max-width: 100%;   /* ✅ 防止超过卡片 */
+  flex-shrink: 1;       /* ✅ 如果你用 flex，则它不扩张 */
+  min-width: 0;         /* ✅ 防止意外宽度撑卡片 */
   box-sizing: border-box;
 }
 
