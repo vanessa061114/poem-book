@@ -1,39 +1,196 @@
-body {
-  font-family: 'STKaiti', 'KaiTi', serif;
-  margin: 0;
-  padding: 20px;
-  background-color: #fff;
-  color: #333;
-  transition: all 0.3s ease;
+:root {
+  --main-color: #3498db;
+  --bg-color: #fffbe6;
+  --text-color: #333;
+  --header-bg: var(--main-color);
+  --header-text: #fff;
+  --sidebar-bg: var(--main-color);
+  --sidebar-text: #fff;
+  --button-bg: var(--main-color);
+  --button-hover-bg: #2a7bcf;
+  --card-bg: #fff;
+  --card-shadow: rgba(0,0,0,0.1);
+  --card-hover-shadow: rgba(0,0,0,0.2);
 }
 
-#app {
-  max-width: 600px;
-  margin: auto;
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0; padding: 0;
+  font-family: "微软雅黑", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+header {
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 1rem;
   text-align: center;
+  flex-shrink: 0;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
+#sidebar {
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  width: 220px;
+  min-width: 220px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+#sidebar.hidden {
+  transform: translateX(-220px);
+}
+
+#sidebar h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+#sidebar nav button {
+  background: none;
+  border: none;
+  color: var(--sidebar-text);
+  padding: 10px 0;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+#sidebar nav button:hover,
+#sidebar nav button.active {
+  background: rgba(255,255,255,0.2);
+}
+
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+#topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+#toggleSidebarBtn {
+  font-size: 1.4rem;
+  background: var(--button-bg);
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.3s;
+}
+
+#toggleSidebarBtn:hover {
+  background: var(--button-hover-bg);
+}
+
+select#themeColor {
+  padding: 5px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* 内容区域 */
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+/* 诗句卡片 */
+.poem-card {
+  background: var(--card-bg);
+  box-shadow: 0 0 6px var(--card-shadow);
+  padding: 10px 15px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+}
+
+.poem-card:hover {
+  box-shadow: 0 0 12px var(--card-hover-shadow);
 }
 
 .poem-line {
-  margin: 10px 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
-/* 主题样式 */
-body.theme-light {
-  background-color: #ffffff;
-  color: #000000;
+.poem-title {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 6px;
 }
 
-body.theme-dark {
-  background-color: #1e1e1e;
-  color: #ffffff;
+.poem-full {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  color: #444;
+  display: none;
+  margin-top: 8px;
 }
 
-body.theme-pastel {
-  background-color: #fff0f5;
-  color: #5a5a5a;
+/* 表单 */
+form {
+  margin-top: 1rem;
+  max-width: 400px;
+}
+
+form label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+form input[type=text],
+form select,
+form textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+form button[type=submit] {
+  margin-top: 12px;
+  background: var(--button-bg);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+form button[type=submit]:hover {
+  background: var(--button-hover-bg);
 }
