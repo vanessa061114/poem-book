@@ -181,13 +181,15 @@ header {
   margin: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   
-  width: fit-content;
-  min-width: 160px;    /* 最小宽度，避免太窄 */
-  max-width: 300px;    /* 最大宽度，避免太宽 */
+  width: auto;           /* 让宽度根据内容撑开 */
+  min-width: 160px;      /* 保证最小宽度 */
+  max-width: 450px;      /* 最大宽度适当调大一点 */
   
   white-space: normal;
   text-align: center;
+  word-break: break-word; /* 防止超长单词撑破边界 */
 }
+
 
 .poem-card:hover {
   transform: translateY(-3px);
