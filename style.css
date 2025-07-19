@@ -190,22 +190,22 @@ header {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   /* 让宽度只跟诗句决定，先移除max-width和min-width限制试试 */
-  width: auto; 
+  width: auto;
   max-width: none; /* 取消最大宽度限制 */
-  min-width: 0;    /* 取消最小宽度限制 */
+  min-width: 0; /* 取消最小宽度限制 */
 
   white-space: normal;
   word-break: break-word;
   text-align: left;
   box-sizing: border-box;
   position: relative; /* 为绝对定位的子元素做准备 */
- vertical-align: top; /* 避免inline-block默认baseline对齐导致竖直方向的小偏差 */
+  vertical-align: top; /* 避免inline-block默认baseline对齐导致竖直方向的小偏差 */
 }
 
 .poem-line,
 .poem-full {
   max-width: 380px; /* 宽度限制一致 */
-  text-align: left;  /* 左对齐，或者根据需求改为 justify */
+  text-align: left; /* 左对齐，或者根据需求改为 justify */
   white-space: pre-wrap; /* 保留换行 */
   word-break: break-word;
 }
@@ -222,26 +222,22 @@ header {
   margin-top: 6px;
 }
 
-
 .poem-full {
-  position: absolute;
-  top: 100%; /* 放在卡片下方 */
-  left: 0;
-  width: 420px; /* 固定宽度，跟诗句最大宽度保持一致 */
+  position: relative; /* 改为相对定位 */
+  width: 100%;        /* 宽度跟随卡片 */
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease;
-  font-size: 0.9rem;
-  color: #444;
-  line-height: 1.8;
+  transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
   background: #f0f0f0;
-  padding: 8px;
   border-radius: 0 0 12px 12px;
   box-sizing: border-box;
-  z-index: 10;
+  padding: 0; /* 默认无内边距 */
+  margin: 0;
 }
 
 .poem-full.expanded {
+  max-height: 3000px; /* 允许展开到足够大 */
+  padding: 8px;       /* 展开后加回内边距 */
   margin-top: 8px;
 }
 
@@ -275,14 +271,15 @@ header {
   color: white;
   background-color: var(--button-bg);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .poem-actions button:hover {
   background-color: var(--button-hover-bg);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
 
 /* 表单 */
 form {
