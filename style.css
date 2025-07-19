@@ -239,15 +239,17 @@ header {
 }
 
 .poem-full.expanded {
-  display: block;
+  display: inline-block;  /* 改成inline-block，自适应宽度 */
   max-height: none;
-  max-width: 100%;              /* ✅ 限制在卡片内部 */
   overflow: visible;
   white-space: pre-wrap;
   word-break: break-word;
   line-height: 1.5;
   padding-top: 6px;
   box-sizing: border-box;
+  /* 移除宽度相关限制 */
+  width: auto;
+  max-width: 90vw;  /* 最大宽度限制，避免超屏 */
 }
 
 .poem-full,
