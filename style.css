@@ -174,20 +174,25 @@ header {
 
 /* 诗句卡片 */
 .poem-card {
-  display: inline-block;      /* 让宽度跟内容走 */
+  display: inline-block;
+  white-space: nowrap;
   padding: 8px 12px;
   margin: 10px;
   border-radius: 6px;
   box-shadow: 0 0 6px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: box-shadow 0.3s;
-  white-space: nowrap;        /* 不换行，宽度完全根据诗句长度 */
-  max-width: none !important; /* 取消 max-width 限制 */
-  min-width: 0 !important;    /* 取消 min-width 限制 */
+  max-width: none !important;
+  min-width: 0 !important;
+  text-align: center;
 }
 
 
-
+.poem-line, .poem-title {
+  white-space: nowrap;
+  display: inline-block;
+  text-align: center;
+}
 
 
 .poem-card:hover {
@@ -204,6 +209,7 @@ header {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 6px;
+  
 }
 
 .poem-full {
@@ -213,11 +219,13 @@ header {
   font-size: 0.9rem;
   color: #444;
   margin-top: 8px;
-  white-space: pre-wrap;
+  white-space: normal;
+  max-width: 300px;
 }
 
+
 .poem-full.expanded {
-  max-height: 500px; /* or more if needed */
+  max-height: 500px;
 }
 
 .poem-line {
