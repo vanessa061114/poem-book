@@ -6,6 +6,31 @@
     <title>我的诗句收藏</title>
     <style>
       :root {
+        --main-color: #3498db; /* 默认主题颜色 */
+      }
+
+      body {
+        background-color: #fdfdfd;
+        color: var(--main-color);
+      }
+
+      .sidebar {
+        background-color: var(--main-color);
+        color: white;
+      }
+
+      .button {
+        background-color: var(--main-color);
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+    </style>
+
+    <style>
+      :root {
         --bg-color: #fffbe6;
         --text-color: #333333;
         --header-bg: #ffd54f;
@@ -66,6 +91,16 @@
       <button id="menuBtn" aria-label="打开菜单">☰</button>
       <h1>我的诗句收藏</h1>
     </header>
+    <div style="margin: 1em 0">
+      <label for="themeColor">🎨 选择主题颜色：</label>
+      <select id="themeColor" class="button">
+        <option value="#3498db">天空蓝</option>
+        <option value="#e74c3c">热情红</option>
+        <option value="#2ecc71">清新绿</option>
+        <option value="#9b59b6">梦幻紫</option>
+        <option value="#f39c12">橘子黄</option>
+      </select>
+    </div>
 
     <div id="drawer" aria-hidden="true">
       <h2>菜单</h2>
@@ -455,6 +490,17 @@
       renderPoems();
       renderAllPoems();
       renderAuthorsWithPoems();
+    </script>
+    <script>
+      const themeColorSelect = document.getElementById("themeColor");
+      themeColorSelect.addEventListener("change", function () {
+        document.documentElement.style.setProperty(
+          "--main-color",
+          themeColorSelect.value,
+        );
+
+        document.documentElement.style.setProperty("--main-color", this.value);
+      });
     </script>
   </body>
 </html>
