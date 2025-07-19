@@ -189,10 +189,11 @@ header {
   margin: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  width: max-content; 
-  max-width: 90vw;    /* ✅ 防止太宽超出屏幕 */
-
-  white-space: normal;
+  /* 让卡片宽度根据内部内容最长行决定，且不会撑得太宽 */
+  width: auto;
+  max-width: 90vw; /* 最大宽度，防止超出屏幕 */
+  
+  white-space: normal;  /* 允许换行 */
   word-break: break-word;
   text-align: left;
   box-sizing: border-box;
@@ -221,6 +222,7 @@ header {
 }
 
 .poem-full {
+    display: none;
   text-align: left;
   white-space: pre-wrap;      /* ✅ 支持换行和空格 */
   word-break: break-word;
@@ -229,8 +231,10 @@ header {
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
   padding: 0;
+  font-size: 1rem;
   margin-top: 8px;
   box-shadow: none;
+  box-sizing: border-box;
   background: transparent;
 }
 
@@ -249,21 +253,19 @@ header {
 
 .poem-full,
 .poem-full.expanded {
-  width: 100%;       /* ✅ 跟随卡片宽度 */
-  max-width: 100%;   /* ✅ 防止超过卡片 */
-  flex-shrink: 1;       /* ✅ 如果你用 flex，则它不扩张 */
-  min-width: 0;         /* ✅ 防止意外宽度撑卡片 */
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
 .poem-line {
-  display: inline-block;
+  display: block; /* 换成块级元素更自然 */
   font-size: 1.25rem;
   font-weight: bold;
-  white-space: normal;     /* ✅ 允许换行 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;         /* ✅ 继承卡片宽度限制 */
+  white-space: normal;  /* 允许换行 */
+  max-width: 100%;      /* 最大宽度限制为卡片宽度 */
+  word-break: break-word;
+  margin-bottom: 0.5em; /* 行间距 */
 }
 
 .poem-actions {
