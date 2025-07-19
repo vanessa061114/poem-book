@@ -223,7 +223,7 @@ header {
 }
 
 .poem-full {
- text-align: center;
+   text-align: left;
   position: relative; /* 改为相对定位 */
   width: 100%;        /* 宽度跟随卡片 */
   max-height: 0;
@@ -231,9 +231,7 @@ header {
   transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
   box-sizing: border-box;
   padding: 0; /* 默认无内边距 */
-  margin: 0;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 8px auto 0 auto; /* 上方8px间距，左右自动居中 */
   background: transparent; /* 或者改成和卡片背景一致 */
   /* 如果要完全去掉阴影和边框，也确保没有其他box-shadow */
   box-shadow: none;
@@ -249,9 +247,8 @@ header {
 }
 
 .poem-full, .poem-full.expanded {
-  width: 100%;
-  max-width: 380px; /* 或和未展开的行宽保持一致 */
-  box-sizing: border-box;
+  width: auto;        /* ✅ 不要写 100%，要匹配卡片宽度 */
+  max-width: none;    /* ✅ 取消强制限制 */
 }
 
 .poem-line {
