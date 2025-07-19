@@ -1,108 +1,129 @@
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PoemBook 诗句收藏</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="content-wrapper">
-    <button id="toggleSidebarBtn" aria-label="切换侧栏">☰</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PoemBook 诗句收藏</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="content-wrapper">
+      <button id="toggleSidebarBtn" aria-label="切换侧栏">☰</button>
 
-    <div id="sidebar" class="hidden">
-      <!-- 侧栏菜单内容保持你原来的结构 -->
-      <h2>菜单</h2>
-      <nav>
-        <button data-page="home" class="active">首页</button>
-        <button data-page="categories">分类</button>
-        <button data-page="allPoems">全部诗句</button>
-        <button data-page="authors">作者</button>
-      </nav>
+      <div id="sidebar" class="hidden">
+        <h2>菜单</h2>
+        <nav>
+          <button data-page="home" class="active">首页</button>
+          <button data-page="categories">分类</button>
+          <button data-page="allPoems">全部诗句</button>
+          <button data-page="authors">作者</button>
+        </nav>
 
-      <!-- 主题色选择等内容保持原样 -->
-      <label for="themeColor" style="display: none">主题色</label>
-      <select id="themeColor" style="width: 100%; margin-top: 1rem">
-        <option value="#3498db">天空蓝</option>
-        <option value="#e74c3c">热情红</option>
-        <option value="#2ecc71">清新绿</option>
-        <option value="#9b59b6">梦幻紫</option>
-        <option value="#f39c12">橘子黄</option>
-      </select>
+        <!-- 主题色选择，用select或者按钮 -->
+        <label for="themeColor" style="display: none">主题色</label>
+        <select id="themeColor" style="width: 100%; margin-top: 1rem">
+          <option value="#3498db">天空蓝</option>
+          <option value="#e74c3c">热情红</option>
+          <option value="#2ecc71">清新绿</option>
+          <option value="#9b59b6">梦幻紫</option>
+          <option value="#f39c12">橘子黄</option>
+        </select>
 
-      <div
-        id="themeSelector"
-        style="margin-top: auto; display: flex; gap: 8px; padding-top: 1rem"
-      >
-        <button class="color-btn" style="background: #3498db" aria-label="主题色1"></button>
-        <button class="color-btn" style="background: #e74c3c" aria-label="主题色2"></button>
-        <button class="color-btn" style="background: #2ecc71" aria-label="主题色3"></button>
-        <button class="color-btn" style="background: #9b59b6" aria-label="主题色4"></button>
-        <button class="color-btn" style="background: #f39c12" aria-label="主题色5"></button>
-      </div>
-    </div>
-
-    <div id="main">
-      <section id="home" class="page active">
-        <!-- 搜索和添加按钮 -->
-        <div class="top-controls">
-          <input type="text" id="searchInput" placeholder="搜索诗句或作者..." />
-          <button id="toggleAddFormBtn">添加新诗句</button>
+        <!-- 颜色按钮 -->
+        <div
+          id="themeSelector"
+          style="margin-top: auto; display: flex; gap: 8px; padding-top: 1rem"
+        >
+          <button
+            class="color-btn"
+            style="background: #3498db"
+            aria-label="主题色1"
+          ></button>
+          <button
+            class="color-btn"
+            style="background: #e74c3c"
+            aria-label="主题色2"
+          ></button>
+          <button
+            class="color-btn"
+            style="background: #2ecc71"
+            aria-label="主题色3"
+          ></button>
+          <button
+            class="color-btn"
+            style="background: #9b59b6"
+            aria-label="主题色4"
+          ></button>
+          <button
+            class="color-btn"
+            style="background: #f39c12"
+            aria-label="主题色5"
+          ></button>
         </div>
+      </div>
 
-        <!-- 添加诗句表单，默认隐藏 -->
-        <form id="addPoemForm" style="display: none">
-          <label for="newLine">诗句摘录</label>
-          <input type="text" id="newLine" required placeholder="请输入你喜欢的诗句" />
-          <label for="newTitle">原诗标题</label>
-          <input type="text" id="newTitle" required placeholder="原诗名称" />
-          <label for="newAuthor">作者</label>
-          <input type="text" id="newAuthor" required placeholder="诗歌作者" />
-          <label for="newCategory">分类</label>
-          <select id="newCategory" required>
-            <option disabled selected>请选择分类</option>
-          </select>
-          <label for="newFull">全文</label>
-          <textarea id="newFull" rows="4" required placeholder="输入完整诗文"></textarea>
-          <button type="submit">添加诗句</button>
-        </form>
+      <!-- 主内容区 -->
+      <div id="main">
+        <section id="home" class="page active">
+          <!-- 搜索和添加按钮单独一块，居中横排 -->
+          <div class="search-add-wrapper">
+            <!-- 修改点 -->
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="搜索诗句或作者..."
+            />
+            <button id="toggleAddFormBtn">添加新诗句</button>
+          </div>
 
-        <!-- 诗句列表 -->
-        <div id="poemList" class="poem-card-container"></div>
-      </section>
+          <!-- 添加表单 -->
+          <form id="addPoemForm" style="display: none">
+            <label for="newLine">诗句摘录</label>
+            <input
+              type="text"
+              id="newLine"
+              required
+              placeholder="请输入你喜欢的诗句"
+            />
+            <label for="newTitle">原诗标题</label>
+            <input type="text" id="newTitle" required placeholder="原诗名称" />
+            <label for="newAuthor">作者</label>
+            <input type="text" id="newAuthor" required placeholder="诗歌作者" />
+            <label for="newCategory">分类</label>
+            <select id="newCategory" required>
+              <option disabled selected>请选择分类</option>
+            </select>
+            <label for="newFull">全文</label>
+            <textarea
+              id="newFull"
+              rows="4"
+              required
+              placeholder="输入完整诗文"
+            ></textarea>
+            <button type="submit">添加诗句</button>
+          </form>
 
-      <section id="categories" class="page">
-        <h2>分类列表</h2>
-        <ul id="categoryList"></ul>
-      </section>
+          <!-- 诗句列表 -->
+          <div id="poemList" class="poem-card-container"></div>
+        </section>
 
-      <section id="allPoems" class="page">
-        <h2>全部诗句</h2>
-        <div id="allPoemList"></div>
-      </section>
+        <section id="categories" class="page">
+          <h2>分类列表</h2>
+          <ul id="categoryList"></ul>
+        </section>
 
-      <section id="authors" class="page">
-        <h2>作者列表</h2>
-        <div id="authorList"></div>
-      </section>
+        <section id="allPoems" class="page">
+          <h2>全部诗句</h2>
+          <div id="allPoemList"></div>
+        </section>
+
+        <section id="authors" class="page">
+          <h2>作者列表</h2>
+          <div id="authorList"></div>
+        </section>
+      </div>
+
+      <script src="script.js"></script>
     </div>
-  </div>
-
-  <script src="script.js"></script>
-  <script>
-    // 切换添加表单显示隐藏
-    const toggleBtn = document.getElementById('toggleAddFormBtn');
-    const addForm = document.getElementById('addPoemForm');
-
-    toggleBtn.addEventListener('click', () => {
-      if (addForm.style.display === 'none' || addForm.style.display === '') {
-        addForm.style.display = 'block';
-        toggleBtn.textContent = '关闭添加';
-      } else {
-        addForm.style.display = 'none';
-        toggleBtn.textContent = '添加新诗句';
-      }
-    });
-  </script>
-</body>
+  </body>
 </html>
