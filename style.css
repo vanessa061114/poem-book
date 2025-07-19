@@ -252,12 +252,7 @@ header {
   max-width: 90vw;  /* 最大宽度限制，避免超屏 */
 }
 
-.poem-full,
-.poem-full.expanded {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
+
 
 .poem-line {
   display: block; /* 换成块级元素更自然 */
