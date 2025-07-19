@@ -239,12 +239,18 @@ header {
 }
 
 .poem-actions {
+  display: none;
   margin-top: 8px;
+}
+
+.poem-full.expanded + .poem-actions {
+  display: block;
 }
 
 .poem-actions button {
   margin-right: 8px;
-  padding: 6px 12px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
   cursor: pointer;
   border: none;
   border-radius: 6px;
