@@ -174,21 +174,20 @@ header {
 
 /* 诗句卡片 */
 .poem-card {
-  display: inline-block; /* ✅ 每张卡片自己撑开宽度 */
+  display: block;                  /* ✅ 或 display: flex 也行 */
+  flex: 0 1 auto;                  /* ✅ 告诉 flex 它可以自适应宽度 */
   background: var(--card-bg);
   box-shadow: 0 0 6px var(--card-shadow);
   padding: 10px 15px;
-  margin: 8px;
+  margin: 0;                       /* ✅ 去掉 margin，让 gap 生效 */
   border-radius: 6px;
   cursor: pointer;
   transition: box-shadow 0.3s;
-  vertical-align: top;
   word-break: break-word;
-
-  /* ✅ 控制最大最小宽度 */
   min-width: 160px;
   max-width: 360px;
 }
+
 
 
 .poem-card:hover {
@@ -331,8 +330,10 @@ button {
 }
 
 .poem-card-container {
-  display: block; /* ✅ 取消 flex 或 grid 布局 */
-  text-align: left;
+  display: flex;
+  flex-wrap: wrap;              /* ✅ 允许换行 */
+  justify-content: flex-start;  /* ✅ 靠左排列 */
+  gap: 16px;                    /* ✅ 卡片之间留空 */
 }
 
 
