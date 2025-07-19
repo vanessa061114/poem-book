@@ -181,9 +181,10 @@ header {
   box-shadow: 0 0 6px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: box-shadow 0.3s;
-  max-width: none !important;
-  min-width: 0 !important;
+  max-width: 90vw; /* 限制卡片最大宽度不超过视口宽度90% */
+  min-width: 180px; /* 或者你想要的最小宽度 */
   text-align: center;
+  white-space: normal; /* 允许换行 */
 }
 
 
@@ -208,7 +209,8 @@ header {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 6px;
-  display: block; /* 让作者标题单独一行 */
+  display: block;
+  white-space: normal; /* 允许换行 */
 }
 
 .poem-full {
@@ -228,12 +230,11 @@ header {
 }
 
 .poem-line {
-  white-space: nowrap; /* 跟卡片保持一致，不自动换行 */
-  display: block;
-  text-align: center;
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 4px;
+  display: block; /* 单独占一行 */
+  white-space: normal; /* 允许诗句自动换行 */
 }
 
 
