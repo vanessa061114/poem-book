@@ -1,1 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>我的诗句收藏</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: "微软雅黑", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1em;
+      text-align: center;
+    }
+    .poem-list {
+      padding: 20px;
+    }
+    .poem-item {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+    .poem-detail {
+      display: none;
+      white-space: pre-wrap;
+      margin-top: 10px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>我的诗句收藏</h1>
+  </header>
+  <div class="poem-list">
+    <!-- 示例诗句 -->
+    <div class="poem-item" onclick="togglePoem(this)">
+      <strong>1. 沉舟侧畔千帆过</strong>
+      <div class="poem-detail">
+        沉舟侧畔千帆过，病树前头万木春。<br>
+        ——刘禹锡《酬乐天扬州初逢席上见赠》
+      </div>
+    </div>
+
+    <div class="poem-item" onclick="togglePoem(this)">
+      <strong>2. 此情可待成追忆</strong>
+      <div class="poem-detail">
+        此情可待成追忆，只是当时已惘然。<br>
+        ——李商隐《锦瑟》
+      </div>
+    </div>
+    
+    <!-- 你可以自己继续添加 -->
+  </div>
+
+  <script>
+    function togglePoem(item) {
+      const detail = item.querySelector('.poem-detail');
+      detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>
 
