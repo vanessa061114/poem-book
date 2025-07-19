@@ -246,7 +246,7 @@ header {
   margin-top: 8px;
   overflow: visible; /* 确保显示完整 */
   line-height: 1.5;  /* 保证行高 */
-    padding-bottom: 12px;  /* 比普通padding更大点 */
+    padding-bottom: 15px;  /* 比普通padding更大点 */
 }
 
 .poem-line {
