@@ -164,17 +164,24 @@ function createPoemCard(poem, index) {
     }
   });
   // 点击卡片非按钮区域，切换全文展开
+  // 动态计算max-height，实现展开收起动画且内容自适应高度
   card.addEventListener("click", (e) => {
     if (e.target.tagName === "BUTTON") return;
     const full = card.querySelector(".poem-full");
-    full.classList.toggle("expanded");
+    if (full.classList.contains("expanded")) {
+      full.style.maxHeight = "0";
+      full.classList.remove("expanded");
+    } else {
+      full.classList.add("expanded");
+      full.style.maxHeight = full.scrollHeight + "px";
+    }
   });
 
   return card;
 }
 
 function formatPoem(text) {
-  return text.replace(/\n/g, '<br>');
+  return text.replace(/\n/g, "<br>");
 }
 
 // 添加诗句表单显示切换
