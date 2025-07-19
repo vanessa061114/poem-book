@@ -189,14 +189,23 @@ header {
   margin: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  width: auto;         /* 让宽度自动适应内容 */
-  min-width: 160px;    /* 最小宽度 */
-  max-width: 420px;    /* 最大宽度 */
+  width: auto; /* 宽度跟内容自动适应 */
+  min-width: 260px; /* 保证卡片不会太窄 */
+  max-width: 420px; /* 最大宽度 */
 
-  white-space: normal; /* 允许换行 */
-  word-break: break-word; /* 必须让长单词换行 */
+  white-space: normal;
+  word-break: break-word;
   text-align: center;
   box-sizing: border-box;
+}
+
+.poem-line,
+.poem-full {
+  max-width: 380px; /* 宽度限制一致 */
+  margin: 0 auto; /* 居中对齐 */
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
 }
 
 .poem-card:hover {
@@ -222,7 +231,6 @@ header {
 }
 
 .poem-full.expanded {
-  max-height: 500px;
   margin-top: 8px;
 }
 
@@ -257,14 +265,15 @@ header {
   color: white;
   background-color: var(--button-bg);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .poem-actions button:hover {
   background-color: var(--button-hover-bg);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
 
 /* 表单 */
 form {
