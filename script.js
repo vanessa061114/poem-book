@@ -102,26 +102,36 @@ function renderPoems() {
     return;
   }
   filtered.forEach((poem) => {
-    const card = createPoemCard(poem);
+    const card = createPoemCard(poem, poems.indexOf(poem));
     poemList.appendChild(card);
   });
 }
 
 // 创建诗句卡片，全文点击展开
-function createPoemCard(poem) {
+function createPoemCard(poem, index) {
   const card = document.createElement("div");
   card.className = "poem-card";
+
   card.innerHTML = `
-  <div class="poem-line">${poem.line}</div>
-  <div class="poem-title">${poem.title} — ${poem.author}</div>
-  <div class="poem-full">${poem.full}</div>
-`;
-  card.addEventListener("click", () => {
+    <div class="poem-line">${poem.line}</div>
+    <div class="poem-title">${poem.title} — ${poem.author}</div>
+    <div class="poem-full">${poem.full}</div>
+    <div class="poem-actions">
+      <button onclick="editPoem(${index})">✏ 修改</button>
+      <button onclick="deletePoem(${index})">🗑 删除</button>
+    </div>
+  `;
+
+  card.addEventListener("click", (e) => {
+    // 防止点击按钮也触发展开
+    if (e.target.tagName === "BUTTON") return;
     const full = card.querySelector(".poem-full");
     full.classList.toggle("expanded");
   });
+
   return card;
 }
+
 
 // 添加诗句表单显示切换
 if (toggleAddFormBtn && addPoemForm) {
@@ -168,6 +178,34 @@ if (addPoemForm) {
     addPoemForm.style.display = "none";
     toggleAddFormBtn.textContent = "添加新诗句";
   });
+}
+
+
+function deletePoem(index) {
+  poems.splice(index, 1);
+  localStorage.setItem("poems", JSON.stringify(poems));
+  renderPoems(); // ✅ 改回你实际使用的渲染函数
+}
+
+
+function editPoem(index) {
+  const poem = poems[index];
+  const newLine = prompt("修改诗句：", poem.line);
+  const newTitle = prompt("修改标题：", poem.title);
+  const newAuthor = prompt("修改作者：", poem.author);
+  const newFull = prompt("修改全文（可选）：", poem.full);
+
+  if (newLine && newTitle && newAuthor) {
+    poems[index] = {
+      ...poem,
+      line: newLine,
+      title: newTitle,
+      author: newAuthor,
+      full: newFull || poem.full,
+    };
+    localStorage.setItem("poems", JSON.stringify(poems));
+    renderPoems();
+  }
 }
 
 // 搜索监听
