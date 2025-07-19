@@ -182,7 +182,6 @@ header {
   cursor: pointer;
   transition: box-shadow 0.3s;
   max-width: 90vw; /* 限制卡片最大宽度不超过视口宽度90% */
-  min-width: 180px; /* 或者你想要的最小宽度 */
   text-align: center;
   white-space: normal; /* 允许换行 */
 }
