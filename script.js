@@ -29,32 +29,41 @@ if(toggleSidebarBtn) {
   });
 }
 
-// 主题色动态切换
+const colorButtons = document.querySelectorAll('.color-btn');
+
+// 隐藏下拉选择框（可选）
 if(themeColorSelect) {
-  themeColorSelect.addEventListener('change', () => {
-    document.documentElement.style.setProperty('--main-color', themeColorSelect.value);
-    document.documentElement.style.setProperty('--header-bg', themeColorSelect.value);
-    document.documentElement.style.setProperty('--sidebar-bg', themeColorSelect.value);
-    document.documentElement.style.setProperty('--button-bg', themeColorSelect.value);
-    document.documentElement.style.setProperty('--button-hover-bg', shadeColor(themeColorSelect.value, -15));
-  });
+  themeColorSelect.style.display = 'none';
 }
 
-// 计算颜色阴影（用于按钮悬浮）
-function shadeColor(color, percent) {
-  let f = parseInt(color.slice(1), 16),
-      t = percent < 0 ? 0 : 255,
-      p = percent < 0 ? percent * -1 : percent;
-  let R = f >> 16,
-      G = (f >> 8) & 0x00FF,
-      B = f & 0x0000FF;
-  return "#" + (
-    0x1000000 +
-    (Math.round((t - R) * p / 100) + R) * 0x10000 +
-    (Math.round((t - G) * p / 100) + G) * 0x100 +
-    (Math.round((t - B) * p / 100) + B)
-  ).toString(16).slice(1);
+// 给颜色按钮绑定事件
+colorButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const color = btn.style.backgroundColor;
+    // 转成十六进制颜色
+    const hexColor = rgbToHex(color);
+    setThemeColor(hexColor);
+  });
+});
+
+function setThemeColor(color) {
+  document.documentElement.style.setProperty('--main-color', color);
+  document.documentElement.style.setProperty('--header-bg', color);
+  document.documentElement.style.setProperty('--sidebar-bg', color);
+  document.documentElement.style.setProperty('--button-bg', color);
+  document.documentElement.style.setProperty('--button-hover-bg', shadeColor(color, -15));
 }
+
+// 辅助函数：把 rgb(52, 152, 219) 转成 #3498db
+function rgbToHex(rgb) {
+  const result = rgb.match(/\d+/g);
+  if(!result) return '#3498db';
+  return "#" + result.map(x => {
+    const hex = parseInt(x).toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  }).join('');
+}
+
 
 // 新增诗句表单相关
 const toggleAddFormBtn = document.getElementById('toggleAddFormBtn');
@@ -105,9 +114,9 @@ function createPoemCard(poem) {
     <div class="poem-full" style="display:none;">${poem.full}</div>
   `;
   card.addEventListener('click', () => {
-    const full = card.querySelector('.poem-full');
-    full.style.display = full.style.display === 'block' ? 'none' : 'block';
-  });
+  const full = card.querySelector('.poem-full');
+  full.classList.toggle('expanded');
+});
   return card;
 }
 
