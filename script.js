@@ -173,6 +173,10 @@ function createPoemCard(poem, index) {
   return card;
 }
 
+function formatPoem(text) {
+  return text.replace(/\n/g, '<br>');
+}
+
 // 添加诗句表单显示切换
 if (toggleAddFormBtn && addPoemForm) {
   toggleAddFormBtn.addEventListener("click", () => {
