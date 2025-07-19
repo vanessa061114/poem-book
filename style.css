@@ -202,7 +202,7 @@ header {
 
 .poem-line,
 .poem-full {
-  max-width: 380px; /* 宽度限制一致 */
+  max-width: 100%;
   text-align: left; /* 左对齐，或者根据需求改为 justify */
   white-space: pre-wrap; /* 保留换行 */
   word-break: break-word;
@@ -241,9 +241,11 @@ header {
   overflow: visible;
 }
 
-.poem-full, .poem-full.expanded {
-  width: auto;        /* ✅ 不要写 100%，要匹配卡片宽度 */
-  max-width: none;    /* ✅ 取消强制限制 */
+.poem-full,
+.poem-full.expanded {
+  width: 100%;       /* ✅ 跟随卡片宽度 */
+  max-width: 100%;   /* ✅ 防止超过卡片 */
+  box-sizing: border-box;
 }
 
 .poem-line {
