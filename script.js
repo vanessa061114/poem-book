@@ -5,6 +5,7 @@ const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
 const pages = document.querySelectorAll(".page");
 const navButtons = sidebar.querySelectorAll("nav button");
 const themeColorSelect = document.getElementById("themeColor");
+const categories = ["唐诗", "宋词", "现代诗", "古风", "散文"];
 
 // 页面切换
 navButtons.forEach((btn) => {
@@ -40,6 +41,30 @@ colorButtons.forEach((btn) => {
     setThemeColor(hexColor);
   });
 });
+
+function shadeColor(color, percent) {
+  // color 是 '#xxxxxx' 格式，percent 是正负数字（改变亮度）
+  let R = parseInt(color.substring(1, 3), 16);
+  let G = parseInt(color.substring(3, 5), 16);
+  let B = parseInt(color.substring(5, 7), 16);
+
+  R = parseInt((R * (100 + percent)) / 100);
+  G = parseInt((G * (100 + percent)) / 100);
+  B = parseInt((B * (100 + percent)) / 100);
+
+  R = R < 255 ? R : 255;
+  G = G < 255 ? G : 255;
+  B = B < 255 ? B : 255;
+
+  const RR =
+    R.toString(16).length === 1 ? "0" + R.toString(16) : R.toString(16);
+  const GG =
+    G.toString(16).length === 1 ? "0" + G.toString(16) : G.toString(16);
+  const BB =
+    B.toString(16).length === 1 ? "0" + B.toString(16) : B.toString(16);
+
+  return "#" + RR + GG + BB;
+}
 
 function setThemeColor(color) {
   document.documentElement.style.setProperty("--main-color", color);
@@ -102,7 +127,8 @@ function renderPoems() {
     return;
   }
   filtered.forEach((poem) => {
-    const card = createPoemCard(poem, poems.indexOf(poem));
+    const index = poems.findIndex((p) => p.id === poem.id);
+    const card = createPoemCard(poem, index);
     poemList.appendChild(card);
   });
 }
@@ -117,13 +143,27 @@ function createPoemCard(poem, index) {
     <div class="poem-title">${poem.title} — ${poem.author}</div>
     <div class="poem-full">${poem.full}</div>
     <div class="poem-actions">
-      <button onclick="editPoem(${index})">✏ 修改</button>
-      <button onclick="deletePoem(${index})">🗑 删除</button>
+      <button class="edit-btn">✏ 修改</button>
+      <button class="delete-btn">🗑 删除</button>
     </div>
   `;
 
+  // 点击“修改”按钮
+  const editBtn = card.querySelector(".edit-btn");
+  editBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // 防止触发展开全文
+    editPoem(index);
+  });
+
+  // 点击“删除”按钮
+  const deleteBtn = card.querySelector(".delete-btn");
+  deleteBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    deletePoem(index);
+  });
+
+  // 点击卡片非按钮区域，切换全文展开
   card.addEventListener("click", (e) => {
-    // 防止点击按钮也触发展开
     if (e.target.tagName === "BUTTON") return;
     const full = card.querySelector(".poem-full");
     full.classList.toggle("expanded");
@@ -131,7 +171,6 @@ function createPoemCard(poem, index) {
 
   return card;
 }
-
 
 // 添加诗句表单显示切换
 if (toggleAddFormBtn && addPoemForm) {
@@ -180,13 +219,11 @@ if (addPoemForm) {
   });
 }
 
-
 function deletePoem(index) {
   poems.splice(index, 1);
   localStorage.setItem("poems", JSON.stringify(poems));
   renderPoems(); // ✅ 改回你实际使用的渲染函数
 }
-
 
 function editPoem(index) {
   const poem = poems[index];
