@@ -311,6 +311,17 @@
     </main>
 
     <script>
+      let poems = JSON.parse(localStorage.getItem("poems")) || [
+        {
+          id: 1,
+          line: "床前明月光",
+          title: "静夜思",
+          author: "李白",
+          category: "抒情",
+          full: "床前明月光，疑是地上霜。\n举头望明月，低头思故乡。",
+        },
+      ];
+
       const menuBtn = document.getElementById("menuBtn");
       const drawer = document.getElementById("drawer");
       const mainContent = document.getElementById("mainContent");
