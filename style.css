@@ -1,314 +1,105 @@
-:root {
-  --main-color: #3498db;
-  --bg-color: #fffbe6;
-  --text-color: #333;
-  --header-bg: var(--main-color);
-  --header-text: #fff;
-  --sidebar-bg: var(--main-color);
-  --sidebar-text: #fff;
-  --button-bg: var(--main-color);
-  --button-hover-bg: #2a7bcf;
-  --card-bg: #fff;
-  --card-shadow: rgba(0, 0, 0, 0.1);
-  --card-hover-shadow: rgba(0, 0, 0, 0.2);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body,
-html {
-  margin: 0;
-  padding: 0;
-  font-family: "微软雅黑", sans-serif;
-  background: var(--bg-color);
-  color: var(--text-color);
-
-  /* 内容水平居中，垂直顶部对齐 */
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  /* 给页面留点顶部间距 */
-  padding-top: 20px;
-}
-
-header {
-  background: var(--header-bg);
-  color: var(--header-text);
-  padding: 1rem;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-#sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 220px;
-  background: var(--sidebar-bg);
-  color: var(--sidebar-text);
+/* 页面主体居中和宽度限制 */
+#home {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
-  z-index: 1000;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  /* 加个小内边距底部，方便放主题色选择 */
-  padding-bottom: 60px;
-}
-
-#sidebar.hidden {
-  transform: translateX(-220px);
-}
-
-#sidebar h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-#sidebar nav button {
-  background: none;
-  border: none;
-  color: var(--sidebar-text);
-  padding: 10px 0;
-  text-align: left;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-
-#sidebar nav button:hover,
-#sidebar nav button.active {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-#main {
-  margin: 20px auto;
-  width: 100%;
-  max-width: 800px;
-  padding: 2rem 1.5rem 1rem;
-  overflow-y: auto;
-  position: relative;
-  background: #fff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-#topbar {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-#toggleSidebarBtn {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 1100;
-  font-size: 1.4rem;
-  background: var(--button-bg);
-  border: none;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.3s;
+/* 顶部搜索和添加按钮容器 */
+.top-controls {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
 }
 
-#toggleSidebarBtn:hover {
-  background: var(--button-hover-bg);
-}
-
-/* 把颜色选择下拉放到侧边栏底部 */
-#themeColor {
-  position: absolute;
-  bottom: 20px;
-  left: 1rem;
-  right: 1rem;
-  width: auto;
-  padding: 6px 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+/* 搜索框 */
+#searchInput {
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
-  background: white;
-  color: var(--text-color);
-  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
-/* 改造添加诗句按钮，更简洁漂亮 */
+/* 添加按钮 */
 #toggleAddFormBtn {
-  display: inline-block;
-  background: var(--button-bg);
-  color: #fff;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
   cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
-  margin-bottom: 1rem;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 #toggleAddFormBtn:hover {
-  background: var(--button-hover-bg);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+  background-color: #2980b9;
 }
 
-/* 内容区域 */
-.page {
-  display: none;
-}
-
-.page.active {
-  display: block;
-}
-
-/* 诗句卡片 */
-.poem-card {
-  background: var(--card-bg);
-  box-shadow: 0 0 6px var(--card-shadow);
-  padding: 10px 15px;
-  margin-bottom: 12px;
+/* 添加诗句表单 */
+#addPoemForm {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
   border-radius: 6px;
-  cursor: pointer;
-  transition: box-shadow 0.3s;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
 }
 
-.poem-card:hover {
-  box-shadow: 0 0 12px var(--card-hover-shadow);
-}
-
-.poem-line {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.poem-title {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-.poem-full {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  font-size: 0.9rem;
-  color: #444;
-  margin-top: 8px;
-}
-
-.poem-full.expanded {
-  max-height: 200px; /* 根据内容长度调整 */
-}
-
-/* 表单 */
-form {
-  margin-top: 1rem;
-  max-width: 400px;
-}
-
-form label {
+/* 表单标签 */
+#addPoemForm label {
   display: block;
-  margin-top: 12px;
-  margin-bottom: 4px;
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
   font-weight: 600;
 }
 
-form input[type="text"],
-form select,
-form textarea {
+/* 输入框和选择框 */
+#addPoemForm input,
+#addPoemForm select,
+#addPoemForm textarea {
   width: 100%;
-  padding: 6px 8px;
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  resize: vertical;
+  box-sizing: border-box;
 }
 
-form button[type="submit"] {
-  margin-top: 12px;
-  background: var(--button-bg);
+/* 提交按钮 */
+#addPoemForm button[type="submit"] {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1.1rem;
+  border: none;
+  background-color: #2ecc71;
   color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-form button[type="submit"]:hover {
-  background: var(--button-hover-bg);
+#addPoemForm button[type="submit"]:hover {
+  background-color: #27ae60;
 }
 
-#sidebar label[for="themeColor"] {
-  display: none;
-}
-
-.content-wrapper {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 0 auto;
+/* 诗句卡片容器 */
+#poemList {
   width: 100%;
-  position: relative;
-}
-
-.search-bar {
+  max-width: 600px;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-
-#searchInput {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 25px;
-  font-size: 1rem;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-#searchInput:focus {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* 圆形颜色选择按钮样式 */
-.color-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  transition: transform 0.2s;
-}
-
-.color-btn:hover {
-  transform: scale(1.1);
-}
-
-button {
-  font-size: 1rem;
+  flex-direction: column;
+  gap: 1rem;
 }
