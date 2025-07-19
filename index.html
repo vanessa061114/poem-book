@@ -156,6 +156,10 @@
 
   <script>
     // 读取本地存储或初始化
+    const addPoemForm = document.getElementById("addPoemForm");
+    const poemList = document.getElementById("poemList");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
     let poems = JSON.parse(localStorage.getItem("poems") || "[]");
 
     // 诗句初始数据（如果第一次打开本地没有数据就添加）
