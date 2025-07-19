@@ -189,9 +189,9 @@ header {
   margin: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  width: auto; /* 宽度跟内容自动适应 */
-  min-width: 260px; /* 保证卡片不会太窄 */
-  max-width: 420px; /* 最大宽度 */
+  width: auto;         /* 宽度跟内容自动适应 */
+  min-width: 260px;    /* 保证卡片不会太窄 */
+  max-width: 420px;    /* 最大宽度 */
 
   white-space: normal;
   word-break: break-word;
@@ -202,8 +202,8 @@ header {
 .poem-line,
 .poem-full {
   max-width: 380px; /* 宽度限制一致 */
-  margin: 0 auto; /* 居中对齐 */
-  white-space: normal;
+  text-align: left;  /* 左对齐，或者根据需求改为 justify */
+  white-space: pre-wrap; /* 保留换行 */
   word-break: break-word;
   text-align: center;
 }
@@ -219,6 +219,7 @@ header {
   color: #666;
   margin-top: 6px;
 }
+
 
 .poem-full {
   max-height: 0;
@@ -265,15 +266,14 @@ header {
   color: white;
   background-color: var(--button-bg);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .poem-actions button:hover {
   background-color: var(--button-hover-bg);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 
 /* 表单 */
 form {
