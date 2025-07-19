@@ -175,7 +175,6 @@ header {
 /* 诗句卡片 */
 .poem-card {
   display: inline-block;
-  white-space: nowrap;
   padding: 8px 12px;
   margin: 10px;
   border-radius: 6px;
@@ -209,7 +208,7 @@ header {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 6px;
-  
+  display: block; /* 让作者标题单独一行 */
 }
 
 .poem-full {
@@ -230,8 +229,11 @@ header {
 
 .poem-line {
   white-space: nowrap; /* 跟卡片保持一致，不自动换行 */
-  display: inline-block;
+  display: block;
   text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
 
