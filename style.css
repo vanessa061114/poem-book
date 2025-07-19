@@ -174,15 +174,16 @@ header {
 
 /* 诗句卡片 */
 .poem-card {
-  display: inline-block;     /* 让卡片宽度跟内容匹配 */
+  display: inline-block;      /* 让宽度跟内容走 */
   padding: 8px 12px;
   margin: 10px;
   border-radius: 6px;
-  box-shadow: 0 0 6px var(--card-shadow);
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: box-shadow 0.3s;
-  white-space: normal;
-  max-width: 350px;    /* 超过这个宽度自动换行 */
+  white-space: nowrap;        /* 不换行，宽度完全根据诗句长度 */
+  max-width: none !important; /* 取消 max-width 限制 */
+  min-width: 0 !important;    /* 取消 min-width 限制 */
 }
 
 
@@ -220,6 +221,8 @@ header {
 }
 
 .poem-line {
+  white-space: nowrap; /* 跟卡片保持一致，不自动换行 */
+  display: inline-block;
   text-align: center;
 }
 
@@ -334,7 +337,8 @@ button {
 }
 
 .poem-card-container {
-  text-align: center;       /* 让内容整体居中 */
+  text-align: center;      /* 水平居中 */
+  /* 不用 flex 或 grid，让卡片自己按内容宽度撑开 */
 }
 
 
