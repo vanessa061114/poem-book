@@ -159,9 +159,10 @@ function createPoemCard(poem, index) {
   const deleteBtn = card.querySelector(".delete-btn");
   deleteBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    deletePoem(index);
+    if (confirm("确定删除这条诗句吗？")) {
+      deletePoem(index);
+    }
   });
-
   // 点击卡片非按钮区域，切换全文展开
   card.addEventListener("click", (e) => {
     if (e.target.tagName === "BUTTON") return;
