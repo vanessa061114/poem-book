@@ -144,7 +144,7 @@ header {
 }
 
 /* 改造添加诗句按钮，更简洁漂亮 */
-#addPoemBtn {
+#toggleAddFormBtn {
   display: inline-block;
   background: var(--button-bg);
   color: #fff;
@@ -158,10 +158,11 @@ header {
   margin-bottom: 1rem;
 }
 
-#addPoemBtn:hover {
+#toggleAddFormBtn:hover {
   background: var(--button-hover-bg);
   box-shadow: 0 5px 10px rgba(0,0,0,0.25);
 }
+
 
 
 /* 内容区域 */
@@ -201,12 +202,18 @@ header {
 }
 
 .poem-full {
-  white-space: pre-wrap;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
   font-size: 0.9rem;
   color: #444;
-  display: none;
   margin-top: 8px;
 }
+
+.poem-full.expanded {
+  max-height: 200px; /* 根据内容长度调整 */
+}
+
 
 /* 表单 */
 form {
@@ -249,4 +256,14 @@ form button[type=submit]:hover {
 
 #sidebar label[for="themeColor"] {
   display: none;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
 }
