@@ -246,20 +246,41 @@
     });
 
     // 添加新诗句表单处理
-    const addPoemForm = document.getElementById("addPoemForm");
-
     addPoemForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const newLine = document.getElementById("newLine").value.trim();
-      const newTitle = document.getElementById("newTitle").value.trim();
-      const newAuthor = document.getElementById("newAuthor").value.trim();
-      const newCategory = document.getElementById("newCategory").value;
-      const newFull = document.getElementById("newFull").value.trim();
+  e.preventDefault();
 
-      if (!newLine || !newTitle || !newAuthor || !newCategory || !newFull) {
-        alert("请填写所有字段！");
-        return;
-      }
+  const newLine = document.getElementById("newLine").value.trim();
+  const newTitle = document.getElementById("newTitle").value.trim();
+  const newAuthor = document.getElementById("newAuthor").value.trim();
+  const newCategory = document.getElementById("newCategory").value;
+  const newFull = document.getElementById("newFull").value.trim();
+
+  if (!newLine || !newTitle || !newAuthor || !newCategory || !newFull) {
+    alert("请填写所有字段！");
+    return;
+  }
+
+  // 新id，保证唯一
+  const newId = poems.length > 0 ? Math.max(...poems.map(p => p.id)) + 1 : 1;
+
+  poems.push({
+    id: newId,
+    line: newLine,
+    title: newTitle,
+    author: newAuthor,
+    category: newCategory,
+    full: newFull
+  });
+
+  // 更新本地存储
+  localStorage.setItem("poems", JSON.stringify(poems));
+
+  // 重点！刷新列表，马上显示新诗句
+  renderPoems();
+
+  // 清空表单，方便继续添加
+  addPoemForm.reset();
+});
 
       // 生成新id
       const newId = poems.length > 0 ? Math.max(...poems.map
