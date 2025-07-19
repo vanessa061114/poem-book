@@ -182,9 +182,11 @@ header {
   cursor: pointer;
   transition: all 0.3s ease;
   background-color: white;
-  text-align: left; /* 内部文字左对齐 */
-  vertical-align: top; /* 顶部对齐 */
-  max-width: 100%; /* 防止卡片超出容器 */
+  text-align: left;
+  vertical-align: top;
+  max-width: 100%;
+  /* 关键：移除任何可能限制宽度的样式 */
+  width: auto;
 }
 
 
@@ -197,7 +199,7 @@ header {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 8px;
-  white-space: nowrap; /* 标题不换行 */
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -223,7 +225,8 @@ header {
   margin-bottom: 8px;
   line-height: 1.6;
   word-break: normal;
-  overflow-wrap: break-word; /* 长单词自动换行 */
+  overflow-wrap: break-word;
+  /* 关键：移除 max-width 限制 */
 }
 
 /* 表单 */
@@ -339,8 +342,8 @@ button {
 .poem-card-container {
   text-align: center;
   padding: 16px;
+  font-size: 0; /* 消除 inline-block 元素间的间隙 */
 }
-
 
 
 
