@@ -1,359 +1,542 @@
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>我的诗句收藏</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #fffbe6;
-      color: #333;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .search-bar {
-      margin-bottom: 20px;
-    }
-    input[type="text"], textarea, select {
-      width: 100%;
-      padding: 8px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      margin-top: 5px;
-      margin-bottom: 15px;
-      resize: vertical;
-    }
-    .category-filter {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .category-filter button {
-      background: #ffd54f;
-      border: none;
-      padding: 8px 12px;
-      margin: 0 5px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .category-filter button.active,
-    .category-filter button:hover {
-      background: #ffa000;
-      color: white;
-    }
-    .poem-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 6px #ccc;
-      padding: 15px;
-      margin-bottom: 15px;
-      cursor: pointer;
-      transition: box-shadow 0.3s;
-    }
-    .poem-card:hover {
-      box-shadow: 0 0 10px #ffca28;
-    }
-    .poem-line {
-      font-weight: bold;
-      font-size: 18px;
-    }
-    .poem-title {
-      font-style: italic;
-      color: #666;
-      margin-top: 6px;
-    }
-    .poem-full {
-      margin-top: 10px;
-      white-space: pre-wrap;
-      display: none;
-      border-top: 1px solid #eee;
-      padding-top: 10px;
-      color: #444;
-    }
-    form#addPoemForm {
-      background: #fff9d6;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 6px #ffd54f;
-      margin-top: 30px;
-    }
-    form#addPoemForm label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-    }
-    form#addPoemForm button {
-      background: #ffa000;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-size: 16px;
-      width: 100%;
-      transition: background-color 0.3s;
-    }
-    form#addPoemForm button:hover {
-      background: #ff6f00;
-    }
-  </style>
-</head>
-<body>
-  <h1>我的诗句收藏</h1>
-
-  <input
-    class="search-bar"
-    type="text"
-    id="searchInput"
-    placeholder="搜索诗句或作者..."
-  />
-
-  <div class="category-filter" id="categoryFilter">
-    <button class="active" data-category="all">全部</button>
-    <div id="category-buttons"></div>
-  </div>
-
-  <div id="poemList"></div>
-
-  <!-- 新增诗句表单 -->
-  <form id="addPoemForm">
-    <h2>添加新诗句</h2>
-    <label for="newLine">诗句摘录</label>
-    <input type="text" id="newLine" required placeholder="请输入你喜欢的诗句" />
-
-    <label for="newTitle">原诗标题</label>
-    <input type="text" id="newTitle" required placeholder="原诗名称" />
-
-    <label for="newAuthor">作者</label>
-    <input type="text" id="newAuthor" required placeholder="诗歌作者" />
-
-    <label for="newCategory">分类</label>
-    <select id="newCategory" required>
-      <option disabled selected>请选择分类</option>
-      <option value="抒情">抒情</option>
-      <option value="山水">山水</option>
-      <option value="思乡">思乡</option>
-      <option value="爱情">爱情</option>
-    </select>
-
-    <label for="newFull">全文</label>
-    <textarea id="newFull" rows="5" required placeholder="输入完整诗文"></textarea>
-
-    <button type="submit">添加诗句</button>
-  </form>
-
-  <hr />
-  <h2>管理分类</h2>
-
-  <!-- 添加分类 -->
-  <input type="text" id="new-category" placeholder="输入新分类名" />
-  <button onclick="addCategory()">添加分类</button>
-
-  <!-- 删除分类 -->
-  <select id="delete-category-select"></select>
-  <button onclick="deleteCategory()">删除分类</button>
-
-  <script>
-    let categories = JSON.parse(localStorage.getItem("categories")) || ["抒情", "山水", "思乡", "爱情"];
-
-    function saveCategories() {
-      localStorage.setItem("categories", JSON.stringify(categories));
-    }
-
-    function renderCategories() {
-      const categorySelect = document.getElementById("newCategory");
-      const deleteSelect = document.getElementById("delete-category-select");
-      const categoryButtons = document.getElementById("category-buttons");
-
-      // 清空原有的
-      categorySelect.innerHTML = '<option disabled selected>请选择分类</option>';
-      deleteSelect.innerHTML = "";
-      categoryButtons.innerHTML = "";
-
-      categories.forEach(cat => {
-        // 添加到添加诗句下拉框
-        const option = document.createElement("option");
-        option.value = cat;
-        option.textContent = cat;
-        categorySelect.appendChild(option);
-
-        // 添加到删除分类的下拉框
-        const delOption = document.createElement("option");
-        delOption.value = cat;
-        delOption.textContent = cat;
-        deleteSelect.appendChild(delOption);
-
-        // 添加到页面上方的分类按钮区域
-        const btn = document.createElement("button");
-        btn.textContent = cat;
-        btn.onclick = () => filterPoems(cat);
-        categoryButtons.appendChild(btn);
-      });
-    }
-
-    // 添加分类
-    function addCategory() {
-      const input = document.getElementById("new-category");
-      const newCat = input.value.trim();
-      if (!newCat) return alert("分类名不能为空");
-      if (categories.includes(newCat)) return alert("分类已存在");
-
-      categories.push(newCat);
-      saveCategories();
-      input.value = "";
-      renderCategories();
-    }
-
-    // 删除分类
-    function deleteCategory() {
-      const select = document.getElementById("delete-category-select");
-      const selected = select.value;
-      if (!selected) return alert("请选择一个分类");
-
-      if (!confirm(`确定要删除分类「${selected}」吗？此操作不会删除已有诗句，但该分类将不再可选。`)) return;
-
-      categories = categories.filter(c => c !== selected);
-      saveCategories();
-      renderCategories();
-    }
-
-    const addPoemForm = document.getElementById("addPoemForm");
-    const poemList = document.getElementById("poemList");
-    const searchInput = document.getElementById("searchInput");
-    const categoryFilter = document.getElementById("categoryFilter");
-
-    const initialPoems = [
-      {
-        id: 1,
-        line: "欲穷千里目，更上一层楼",
-        title: "登鹳雀楼",
-        author: "王之涣",
-        category: "山水",
-        full: "白日依山尽，黄河入海流。欲穷千里目，更上一层楼。"
-      },
-      {
-        id: 2,
-        line: "人生得意须尽欢，莫使金樽空对月",
-        title: "将进酒",
-        author: "李白",
-        category: "抒情",
-        full: "君不见黄河之水天上来，奔流到海不复回……"
-      }
-    ];
-
-    let poems = JSON.parse(localStorage.getItem("poems") || "[]");
-    if (poems.length === 0) {
-      poems = initialPoems;
-      localStorage.setItem("poems", JSON.stringify(poems));
-    }
-
-    let currentCategory = "all";
-
-    function renderPoems() {
-      poemList.innerHTML = "";
-      let keyword = searchInput.value.trim().toLowerCase();
-
-      let filtered = poems.filter(poem => {
-        let matchCategory = currentCategory === "all" || poem.category === currentCategory;
-        let matchKeyword =
-          poem.line.toLowerCase().includes(keyword) ||
-          poem.title.toLowerCase().includes(keyword) ||
-          poem.author.toLowerCase().includes(keyword);
-        return matchCategory && matchKeyword;
-      });
-
-      if (filtered.length === 0) {
-        poemList.innerHTML = "<p>没有找到符合条件的诗句。</p>";
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>我的诗句收藏</title>
+    <style>
+      /* 重置及基础 */
+      * {
+        box-sizing: border-box;
       }
 
-      filtered.forEach(poem => {
-        const card = document.createElement("div");
-        card.className = "poem-card";
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #fffbe6;
+        color: #333;
+        overflow-x: hidden;
+        /* 防止横向滚动 */
+      }
 
-        card.innerHTML = `
-          <div class="poem-line">${poem.line}</div>
-          <div class="poem-title">${poem.title} — ${poem.author}</div>
-          <div class="poem-full">${poem.full}</div>
-        `;
+      /* 顶部菜单栏 */
+      header {
+        background: #ffd54f;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-        card.addEventListener("click", () => {
-          const full = card.querySelector(".poem-full");
-          full.style.display = full.style.display === "block" ? "none" : "block";
+      #menuBtn {
+        font-size: 24px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        user-select: none;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        flex-grow: 1;
+        text-align: center;
+      }
+
+      /* 侧边栏抽屉 */
+      #drawer {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        height: 100vh;
+        background: #fff9d6;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #drawer.open {
+        left: 0;
+      }
+
+      #drawer h2 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+      }
+
+      #drawer nav button {
+        background: none;
+        border: none;
+        padding: 10px;
+        text-align: left;
+        width: 100%;
+        font-size: 1rem;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        transition: background-color 0.2s;
+      }
+
+      #drawer nav button:hover,
+      #drawer nav button.active {
+        background-color: #ffd54f;
+      }
+
+      /* 主体内容区域 */
+      main {
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        transition: margin-left 0.3s ease;
+      }
+
+      main.shifted {
+        margin-left: 250px;
+      }
+
+      /* 搜索框 */
+      .search-bar {
+        margin-bottom: 20px;
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      /* 诗句卡片 */
+      .poem-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 6px #ccc;
+        padding: 15px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: box-shadow 0.3s;
+      }
+
+      .poem-card:hover {
+        box-shadow: 0 0 10px #ffca28;
+      }
+
+      .poem-line {
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .poem-title {
+        font-style: italic;
+        color: #666;
+        margin-top: 6px;
+      }
+
+      .poem-full {
+        margin-top: 10px;
+        white-space: pre-wrap;
+        display: none;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        color: #444;
+      }
+
+      /* 折叠表单按钮 */
+      #toggleAddFormBtn {
+        background: #ffa000;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-bottom: 10px;
+        font-size: 16px;
+        width: 100%;
+        transition: background-color 0.3s;
+      }
+
+      #toggleAddFormBtn:hover {
+        background: #ff6f00;
+      }
+
+      /* 添加诗句表单 - 默认隐藏 */
+      #addPoemForm {
+        background: #fff9d6;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 6px #ffd54f;
+        margin-bottom: 30px;
+        display: none;
+      }
+
+      #addPoemForm label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+      }
+
+      #addPoemForm input[type="text"],
+      #addPoemForm select,
+      #addPoemForm textarea {
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        resize: vertical;
+        box-sizing: border-box;
+      }
+
+      #addPoemForm button[type="submit"] {
+        background: #ffa000;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        transition: background-color 0.3s;
+      }
+
+      #addPoemForm button[type="submit"]:hover {
+        background: #ff6f00;
+      }
+
+      /* 作者列表 */
+      #authorList {
+        margin-top: 10px;
+      }
+
+      #authorList div {
+        padding: 8px;
+        background: white;
+        border-radius: 6px;
+        margin-bottom: 6px;
+        cursor: pointer;
+        box-shadow: 0 0 5px #ccc;
+        transition: background-color 0.2s;
+      }
+
+      #authorList div:hover {
+        background: #ffd54f;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <button id="menuBtn" aria-label="打开菜单">☰</button>
+      <h1>我的诗句收藏</h1>
+    </header>
+
+    <div id="drawer" aria-hidden="true">
+      <h2>菜单</h2>
+      <nav>
+        <button data-page="home" class="active">首页</button>
+        <button data-page="categories">分类</button>
+        <button data-page="allPoems">全部诗句</button>
+        <button data-page="authors">作者</button>
+      </nav>
+    </div>
+
+    <main id="mainContent">
+      <!-- 首页内容 -->
+      <div id="page-home">
+        <input
+          class="search-bar"
+          type="text"
+          id="searchInput"
+          placeholder="搜索诗句或作者..."
+        />
+
+        <button id="toggleAddFormBtn">添加新诗句</button>
+
+        <form id="addPoemForm">
+          <label for="newLine">诗句摘录</label>
+          <input
+            type="text"
+            id="newLine"
+            required
+            placeholder="请输入你喜欢的诗句"
+          />
+
+          <label for="newTitle">原诗标题</label>
+          <input type="text" id="newTitle" required placeholder="原诗名称" />
+
+          <label for="newAuthor">作者</label>
+          <input type="text" id="newAuthor" required placeholder="诗歌作者" />
+
+          <label for="newCategory">分类</label>
+          <select id="newCategory" required>
+            <option disabled selected>请选择分类</option>
+          </select>
+
+          <label for="newFull">全文</label>
+          <textarea
+            id="newFull"
+            rows="5"
+            required
+            placeholder="输入完整诗文"
+          ></textarea>
+
+          <button type="submit">添加诗句</button>
+        </form>
+
+        <div id="poemList"></div>
+      </div>
+
+      <!-- 分类页内容 -->
+      <div id="page-categories" style="display: none">
+        <h2>分类列表</h2>
+        <ul id="categoryList"></ul>
+      </div>
+
+      <!-- 全部诗句页内容 -->
+      <div id="page-allPoems" style="display: none">
+        <h2>全部诗句</h2>
+        <div id="allPoemList"></div>
+      </div>
+
+      <!-- 作者页内容 -->
+      <div id="page-authors" style="display: none">
+        <h2>作者列表</h2>
+        <div id="authorList"></div>
+      </div>
+    </main>
+
+    <script>
+      const menuBtn = document.getElementById("menuBtn");
+      const drawer = document.getElementById("drawer");
+      const mainContent = document.getElementById("mainContent");
+      const toggleAddFormBtn = document.getElementById("toggleAddFormBtn");
+      const addPoemForm = document.getElementById("addPoemForm");
+      const newCategorySelect = document.getElementById("newCategory");
+
+      // 页面区块
+      const pages = {
+        home: document.getElementById("page-home"),
+        categories: document.getElementById("page-categories"),
+        allPoems: document.getElementById("page-allPoems"),
+        authors: document.getElementById("page-authors"),
+      };
+
+      // 打开关闭侧边栏
+      menuBtn.addEventListener("click", () => {
+        const opened = drawer.classList.toggle("open");
+        mainContent.classList.toggle("shifted", opened);
+        drawer.setAttribute("aria-hidden", !opened);
+      });
+
+      // 菜单按钮切换页面
+      drawer.querySelectorAll("nav button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // 切换按钮高亮
+          drawer
+            .querySelectorAll("nav button")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // 隐藏所有页面，显示当前选中
+          Object.values(pages).forEach((page) => (page.style.display = "none"));
+          const pageKey = btn.getAttribute("data-page");
+          pages[pageKey].style.display = "block";
+
+          // 关闭抽屉
+          drawer.classList.remove("open");
+          mainContent.classList.remove("shifted");
+          drawer.setAttribute("aria-hidden", "true");
+        });
+      });
+
+      // 切换新增诗句表单显示
+      toggleAddFormBtn.addEventListener("click", () => {
+        if (addPoemForm.style.display === "block") {
+          addPoemForm.style.display = "none";
+          toggleAddFormBtn.textContent = "添加新诗句";
+        } else {
+          addPoemForm.style.display = "block";
+          toggleAddFormBtn.textContent = "收起表单";
+        }
+      });
+
+      // 分类数据
+      let categories = JSON.parse(localStorage.getItem("categories")) || [
+        "抒情",
+        "山水",
+        "思乡",
+        "爱情",
+      ];
+      function saveCategories() {
+        localStorage.setItem("categories", JSON.stringify(categories));
+      }
+      function renderCategoryOptions() {
+        newCategorySelect.innerHTML =
+          "<option disabled selected>请选择分类</option>";
+        categories.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat;
+          newCategorySelect.appendChild(option);
+        });
+      }
+      function renderCategoryList() {
+        const categoryList = document.getElementById("categoryList");
+        categoryList.innerHTML = "";
+        categories.forEach((cat) => {
+          const li = document.createElement("li");
+          li.textContent = cat;
+          categoryList.appendChild(li);
+        });
+      }
+
+      // 诗句数据
+      const initialPoems = [
+        {
+          id: 1,
+          line: "欲穷千里目，更上一层楼",
+          title: "登鹳雀楼",
+          author: "王之涣",
+          category: "山水",
+          full: "白日依山尽，黄河入海流。欲穷千里目，更上一层楼。",
+        },
+        {
+          id: 2,
+          line: "人生得意须尽欢，莫使金樽空对月",
+          title: "将进酒",
+          author: "李白",
+          category: "抒情",
+          full: "君不见黄河之水天上来，奔流到海不复回……",
+        },
+      ];
+      let poems = JSON.parse(localStorage.getItem("poems") || "[]");
+      if (poems.length === 0) {
+        poems = initialPoems;
+        localStorage.setItem("poems", JSON.stringify(poems));
+      }
+
+      // 渲染首页诗句（带搜索和分类筛选）
+      const poemList = document.getElementById("poemList");
+      const searchInput = document.getElementById("searchInput");
+      let currentCategory = "all";
+
+      function renderPoems() {
+        poemList.innerHTML = "";
+        const keyword = searchInput.value.trim().toLowerCase();
+
+        const filtered = poems.filter((poem) => {
+          const matchCategory =
+            currentCategory === "all" || poem.category === currentCategory;
+          const matchKeyword =
+            poem.line.toLowerCase().includes(keyword) ||
+            poem.title.toLowerCase().includes(keyword) ||
+            poem.author.toLowerCase().includes(keyword);
+          return matchCategory && matchKeyword;
         });
 
-        poemList.appendChild(card);
-      });
-    }
+        if (filtered.length === 0) {
+          poemList.innerHTML = "<p>没有找到符合条件的诗句。</p>";
+          return;
+        }
 
-    function filterPoems(category) {
-      currentCategory = category;
-
-      // 更新按钮样式
-      document.querySelectorAll(".category-filter button").forEach(b => b.classList.remove("active"));
-      const matchBtn = Array.from(document.querySelectorAll(".category-filter button")).find(b => b.textContent === category);
-      if (matchBtn) matchBtn.classList.add("active");
-
-      renderPoems();
-    }
-
-    searchInput.addEventListener("input", renderPoems);
-
-    categoryFilter.querySelectorAll("button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        categoryFilter.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentCategory = btn.getAttribute("data-category");
-        renderPoems();
-      });
-    });
-
-    addPoemForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const newLine = document.getElementById("newLine").value.trim();
-      const newTitle = document.getElementById("newTitle").value.trim();
-      const newAuthor = document.getElementById("newAuthor").value.trim();
-      const newCategory = document.getElementById("newCategory").value;
-      const newFull = document.getElementById("newFull").value.trim();
-
-      if (!newLine || !newTitle || !newAuthor || !newCategory || !newFull) {
-        alert("请填写所有字段！");
-        return;
+        filtered.forEach((poem) => {
+          const card = document.createElement("div");
+          card.className = "poem-card";
+          card.innerHTML = `
+        <div class="poem-line">${poem.line}</div>
+        <div class="poem-title">${poem.title} — ${poem.author}</div>
+        <div class="poem-full">${poem.full}</div>
+      `;
+          card.addEventListener("click", () => {
+            const full = card.querySelector(".poem-full");
+            full.style.display =
+              full.style.display === "block" ? "none" : "block";
+          });
+          poemList.appendChild(card);
+        });
       }
 
-      const newId = poems.length > 0 ? Math.max(...poems.map(p => p.id)) + 1 : 1;
+      // 全部诗句页面
+      const allPoemList = document.getElementById("allPoemList");
+      function renderAllPoems() {
+        allPoemList.innerHTML = "";
+        poems.forEach((poem) => {
+          const card = document.createElement("div");
+          card.className = "poem-card";
+          card.innerHTML = `
+        <div class="poem-line">${poem.line}</div>
+        <div class="poem-title">${poem.title} — ${poem.author}</div>
+      `;
+          allPoemList.appendChild(card);
+        });
+      }
 
-      poems.push({
-        id: newId,
-        line: newLine,
-        title: newTitle,
-        author: newAuthor,
-        category: newCategory,
-        full: newFull
+      // 作者列表页
+      const authorListDiv = document.getElementById("authorList");
+      function renderAuthors() {
+        // 提取所有作者，去重
+        const authors = [...new Set(poems.map((p) => p.author))];
+        authorListDiv.innerHTML = "";
+        authors.forEach((author) => {
+          const div = document.createElement("div");
+          div.textContent = author;
+          authorListDiv.appendChild(div);
+        });
+      }
+
+      // 新增诗句表单提交处理
+      addPoemForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const newLine = document.getElementById("newLine").value.trim();
+        const newTitle = document.getElementById("newTitle").value.trim();
+        const newAuthor = document.getElementById("newAuthor").value.trim();
+        const newCategory = document.getElementById("newCategory").value;
+        const newFull = document.getElementById("newFull").value.trim();
+
+        if (!newLine || !newTitle || !newAuthor || !newCategory || !newFull) {
+          alert("请填写所有字段！");
+          return;
+        }
+
+        const newId =
+          poems.length > 0 ? Math.max(...poems.map((p) => p.id)) + 1 : 1;
+
+        poems.push({
+          id: newId,
+          line: newLine,
+          title: newTitle,
+          author: newAuthor,
+          category: newCategory,
+          full: newFull,
+        });
+
+        localStorage.setItem("poems", JSON.stringify(poems));
+
+        // 更新首页和全部诗句页内容
+        renderPoems();
+        renderAllPoems();
+        renderAuthors();
+
+        addPoemForm.reset();
+        addPoemForm.style.display = "none";
+        toggleAddFormBtn.textContent = "添加新诗句";
       });
 
-      localStorage.setItem("poems", JSON.stringify(poems));
+      // 搜索框监听
+      searchInput.addEventListener("input", renderPoems);
 
+      // 初始化渲染
+      renderCategoryOptions();
+      renderCategoryList();
       renderPoems();
-      addPoemForm.reset();
-      currentCategory = "all";
-      document.querySelectorAll(".category-filter button").forEach(b => b.classList.remove("active"));
-      document.querySelector('.category-filter button[data-category="all"]').classList.add("active");
-    });
-
-    // 初始渲染
-    renderPoems();
-    renderCategories();
-  </script>
-</body>
+      renderAllPoems();
+      renderAuthors();
+    </script>
+  </body>
 </html>
