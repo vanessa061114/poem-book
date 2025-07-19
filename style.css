@@ -205,7 +205,6 @@ header {
   text-align: left;  /* 左对齐，或者根据需求改为 justify */
   white-space: pre-wrap; /* 保留换行 */
   word-break: break-word;
-  text-align: center;
 }
 
 .poem-card:hover {
