@@ -192,8 +192,8 @@ header {
   /* 让卡片宽度根据内部内容最长行决定，且不会撑得太宽 */
   width: auto;
   max-width: 90vw; /* 最大宽度，防止超出屏幕 */
-  
-  white-space: normal;  /* 允许换行 */
+
+  white-space: normal; /* 允许换行 */
   word-break: break-word;
   text-align: left;
   box-sizing: border-box;
@@ -222,14 +222,16 @@ header {
 }
 
 .poem-full {
-    display: none;
+  display: none;
   text-align: left;
-  white-space: pre-wrap;      /* ✅ 支持换行和空格 */
+  white-space: pre-wrap; /* ✅ 支持换行和空格 */
   word-break: break-word;
-  width: 100%;                /* ✅ 不扩宽，跟随卡片 */
+  width: 100%; /* ✅ 不扩宽，跟随卡片 */
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    padding 0.3s ease;
   padding: 0;
   font-size: 1rem;
   margin-top: 8px;
@@ -239,7 +241,7 @@ header {
 }
 
 .poem-full.expanded {
-  display: inline-block;  /* 改成inline-block，自适应宽度 */
+  display: inline-block; /* 改成inline-block，自适应宽度 */
   max-height: none;
   overflow: visible;
   white-space: pre-wrap;
@@ -249,17 +251,15 @@ header {
   box-sizing: border-box;
   /* 移除宽度相关限制 */
   width: auto;
-  max-width: 90vw;  /* 最大宽度限制，避免超屏 */
+  max-width: 90vw; /* 最大宽度限制，避免超屏 */
 }
-
-
 
 .poem-line {
   display: block; /* 换成块级元素更自然 */
   font-size: 1.25rem;
   font-weight: bold;
-  white-space: normal;  /* 允许换行 */
-  max-width: 100%;      /* 最大宽度限制为卡片宽度 */
+  white-space: normal; /* 允许换行 */
+  max-width: 100%; /* 最大宽度限制为卡片宽度 */
   word-break: break-word;
   margin-bottom: 0.5em; /* 行间距 */
 }
