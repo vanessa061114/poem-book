@@ -386,7 +386,10 @@ form#addPoemForm {
   max-width: 500px;
   margin: 2rem auto;
   background: #fff;
-  padding: 20px;
+  /* 关键：用透明边框模拟左右内边距，上下内边距初始为0 */
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  padding: 0;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
