@@ -386,14 +386,12 @@ form#addPoemForm {
   max-width: 500px;
   margin: 2rem auto;
   background: #fff;
-  padding: 0 20px 0 20px;
+  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   max-height: 0;
-  transition:
-    max-height 0.3s ease,
-    padding 0.3s ease;
+  transition: max-height 0.3s ease; /* 只过渡高度 */
 }
 
 form#addPoemForm.active {
