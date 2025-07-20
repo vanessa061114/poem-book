@@ -82,13 +82,13 @@ html {
 }
 
 #main {
-  scrollbar-width: thin;
+  scrollbar-width: none; /* Firefox 隐藏滚动条 */
+  overflow-y: scroll; /* 保留滚动能力 */
   scrollbar-color: var(--main-color) transparent;
   margin: 20px auto;
   width: 100%;
   max-width: 800px;
   padding: 2rem 1.5rem 1rem;
-  overflow-y: auto;
   position: relative;
   background: #fff;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -97,7 +97,7 @@ html {
 }
 
 #main::-webkit-scrollbar {
-  width: 8px;
+  display: none; /* Chrome、Safari 隐藏滚动条 */
 }
 
 #main::-webkit-scrollbar-thumb {
@@ -248,7 +248,7 @@ form button[type="submit"]:hover {
 
 .poem-full.expanded {
   display: block;
-  max-height: none;
+  max-height: 5000px;
   overflow: visible;
   white-space: pre-wrap;
   word-break: break-word;
