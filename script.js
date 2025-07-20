@@ -133,6 +133,31 @@ function renderPoems() {
   });
 }
 
+// 渲染分类列表
+function renderCategories() {
+  const categoryList = document.getElementById("categoryList");
+  if (!categoryList) return;
+  categoryList.innerHTML = "";
+  categories.forEach(cat => {
+    const li = document.createElement("li");
+    li.style.listStyle = "none";
+    li.style.margin = "8px 0";
+    li.innerHTML = `
+      <button style="width:100%;padding:8px;background:var(--button-bg);color:white;border:none;border-radius:4px;cursor:pointer">
+        ${cat} (${poems.filter(p => p.category === cat).length})
+      </button>
+    `;
+    // 点击分类筛选诗句
+    li.querySelector("button").addEventListener("click", () => {
+      // 切换到首页并筛选
+      document.querySelector('[data-page="home"]').click();
+      searchInput.value = cat;
+      renderPoems();
+    });
+    categoryList.appendChild(li);
+  });
+}
+
 // 创建诗句卡片，全文点击展开
 function createPoemCard(poem, index) {
   const card = document.createElement("div");
@@ -265,3 +290,6 @@ if (searchInput) {
 // 初始化
 renderCategoryOptions();
 renderPoems();
+renderCategories(); // 新增调用
+renderAuthors();
+renderAllPoems();
