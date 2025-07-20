@@ -232,16 +232,95 @@ function formatPoem(text) {
   return text.replace(/\n/g, "<br>");
 }
 
+// 渲染作者列表
+function renderAuthors() {
+  const authorList = document.getElementById("authorList");
+  if (!authorList) return;
+  
+  // 收集所有作者并去重
+  const authors = [...new Set(poems.map(p => p.author))];
+  authorList.innerHTML = "";
+  
+  authors.forEach(author => {
+    const count = poems.filter(p => p.author === author).length;
+    const div = document.createElement("div");
+    div.className = "author-item";
+    div.innerHTML = `
+      <h3>${author}</h3>
+      <p>作品数量: ${count}</p>
+      <button class="view-author-btn" data-author="${author}">查看作品</button>
+    `;
+    
+    // 点击查看作者作品
+    div.querySelector(".view-author-btn").addEventListener("click", () => {
+      document.querySelector('[data-page="home"]').click();
+      searchInput.value = author;
+      renderPoems();
+    });
+    
+    authorList.appendChild(div);
+  });
+}
+
+// 渲染全部诗句列表
+function renderAllPoems() {
+  const allPoemList = document.getElementById("allPoemList");
+  if (!allPoemList) return;
+  
+  allPoemList.innerHTML = "";
+  
+  if (poems.length === 0) {
+    allPoemList.innerHTML = "<p>暂无诗句</p>";
+    return;
+  }
+  
+  poems.forEach(poem => {
+    const div = document.createElement("div");
+    div.className = "poem-summary";
+    div.innerHTML = `
+      <h3>${poem.title} - ${poem.author}</h3>
+      <p class="poem-line-preview">${poem.line}</p>
+      <button class="view-full-btn" data-id="${poem.id}">查看全文</button>
+    `;
+    
+    // 点击查看全文
+    div.querySelector(".view-full-btn").addEventListener("click", () => {
+      // 找到对应诗句并展开全文
+      const poemCard = document.querySelector(`.poem-card[data-id="${poem.id}"]`);
+      if (poemCard) {
+        document.querySelector('[data-page="home"]').click();
+        searchInput.value = poem.line;
+        renderPoems();
+        
+        // 延迟后展开全文
+        setTimeout(() => {
+          const fullText = poemCard.querySelector(".poem-full");
+          fullText.classList.add("expanded");
+          fullText.style.maxHeight = fullText.scrollHeight + "px";
+        }, 100);
+      }
+    });
+    
+    allPoemList.appendChild(div);
+  });
+}
+
 // 添加诗句表单显示切换
 if (toggleAddFormBtn && addPoemForm) {
   toggleAddFormBtn.addEventListener("click", () => {
-    // 只通过 active 类名控制，删除 display 相关代码
     addPoemForm.classList.toggle("active");
+    
     // 同步修改按钮文字
     if (addPoemForm.classList.contains("active")) {
       toggleAddFormBtn.textContent = "收起表单";
+      // 展开时设置内边距
+      setTimeout(() => {
+        addPoemForm.style.padding = "20px";
+      }, 10); // 延迟一点确保过渡效果正常
     } else {
       toggleAddFormBtn.textContent = "添加新诗句";
+      // 收起前重置内边距
+      addPoemForm.style.padding = "0";
     }
   });
 }
