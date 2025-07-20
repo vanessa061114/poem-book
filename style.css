@@ -2,12 +2,9 @@
   --main-color: #3498db;
   --bg-color: #fffbe6;
   --text-color: #333;
-  --header-bg: var(--main-color);
-  --header-text: #fff;
   --sidebar-bg: var(--main-color);
   --sidebar-text: #fff;
   --button-bg: var(--main-color);
-  --button-hover-bg: #2a7bcf;
   --button-hover-calc: hsl(from var(--main-color) h s calc(l - 10%));
   --card-bg: #fff;
   --card-shadow: rgba(0, 0, 0, 0.1);
@@ -35,14 +32,6 @@ html {
   padding-top: 20px;
 }
 
-header {
-  background: var(--header-bg);
-  color: var(--header-text);
-  padding: 1rem;
-  text-align: center;
-  flex-shrink: 0;
-}
-
 #sidebar {
   position: fixed;
   top: 0;
@@ -63,6 +52,10 @@ header {
 
 #sidebar.hidden {
   transform: translateX(-220px);
+}
+
+#sidebar:not(.hidden) ~ #main {
+  margin-left: 220px; /* 侧边栏宽度 */
 }
 
 #sidebar h2 {
@@ -100,21 +93,16 @@ header {
   background: #fff;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  transition: margin-left 0.3s ease;
 }
 
 #main::-webkit-scrollbar {
   width: 8px;
 }
+
 #main::-webkit-scrollbar-thumb {
   background-color: var(--main-color);
   border-radius: 4px;
-}
-
-#topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
 }
 
 #toggleSidebarBtn {
@@ -130,21 +118,17 @@ header {
   border-radius: 4px;
   cursor: pointer;
   user-select: none;
-  transition: background 0.3s;
+  transition: all 0.3s;
 }
 
+/* 统一所有按钮的悬停效果 */
 #toggleSidebarBtn:hover,
 #toggleAddFormBtn:hover,
 .poem-actions button:hover,
-form button[type="submit"]:hover {
+form button[type="submit"] {
   background: var(--button-hover-calc);
 }
 
-#toggleSidebarBtn:hover {
-  background: var(--button-hover-bg);
-}
-
-/* 把颜色选择下拉放到侧边栏底部 */
 #themeColor {
   position: absolute;
   bottom: 20px;
@@ -171,13 +155,10 @@ form button[type="submit"]:hover {
   cursor: pointer;
   font-weight: 600;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
+  transition: all 0.3s;
 }
 
 #toggleAddFormBtn:hover {
-  background: var(--button-hover-bg);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
 }
 
@@ -197,31 +178,42 @@ form button[type="submit"]:hover {
   padding: 10px 14px;
   border-radius: 12px;
   margin: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-  /* 让卡片宽度根据内部内容最长行决定，且不会撑得太宽 */
+  box-shadow: 0 2px 8px var(--card-shadow);
   width: auto;
   max-width: 90vw; /* 最大宽度，防止超出屏幕 */
-
   white-space: normal; /* 允许换行 */
   word-break: break-word;
   text-align: left;
   box-sizing: border-box;
   position: relative;
   vertical-align: top;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
-.poem-line,
-.poem-full {
-  max-width: 100%;
-  text-align: left; /* 左对齐，或者根据需求改为 justify */
-  white-space: pre-wrap; /* 保留换行 */
-  word-break: break-word;
+.poem-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .poem-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 20px var(--card-hover-shadow);
+}
+
+.poem-line {
+  display: block; /* 换成块级元素更自然 */
+  font-size: 1.25rem;
+  font-weight: bold;
+  white-space: normal; /* 允许换行 */
+  max-width: 100%; /* 最大宽度限制为卡片宽度 */
+  word-break: break-word;
+  margin-bottom: 0.5em; /* 行间距 */
 }
 
 .poem-title {
@@ -246,12 +238,11 @@ form button[type="submit"]:hover {
   font-size: 1rem;
   margin-top: 8px;
   box-shadow: none;
-  box-sizing: border-box;
   background: transparent;
 }
 
 .poem-full.expanded {
-  display: inline-block; /* 改成inline-block，自适应宽度 */
+  display: block;
   max-height: none;
   overflow: visible;
   white-space: pre-wrap;
@@ -260,18 +251,16 @@ form button[type="submit"]:hover {
   padding-top: 6px;
   box-sizing: border-box;
   /* 移除宽度相关限制 */
-  width: auto;
+  width: 100%;
   max-width: 90vw; /* 最大宽度限制，避免超屏 */
 }
 
-.poem-line {
-  display: block; /* 换成块级元素更自然 */
-  font-size: 1.25rem;
-  font-weight: bold;
-  white-space: normal; /* 允许换行 */
-  max-width: 100%; /* 最大宽度限制为卡片宽度 */
+.poem-line,
+.poem-full {
+  max-width: 100%;
+  text-align: left; /* 左对齐，或者根据需求改为 justify */
+  white-space: pre-wrap; /* 保留换行 */
   word-break: break-word;
-  margin-bottom: 0.5em; /* 行间距 */
 }
 
 .poem-actions {
@@ -299,11 +288,6 @@ form button[type="submit"]:hover {
     box-shadow 0.3s ease;
 }
 
-.poem-actions button:hover {
-  background-color: var(--button-hover-bg);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
 /* 表单 */
 form {
   margin-top: 1rem;
@@ -315,6 +299,7 @@ form select:focus,
 form textarea:focus {
   border-color: var(--main-color);
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  outline: none;
 }
 
 form label {
@@ -343,51 +328,7 @@ form button[type="submit"] {
   padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s;
-}
-
-form button[type="submit"]:hover {
-  background: var(--button-hover-bg);
-}
-
-#sidebar label[for="themeColor"] {
-  display: none;
-}
-
-.content-wrapper {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  position: relative;
-}
-
-.search-bar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-#searchInput {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 25px;
-  font-size: 1rem;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-#searchInput:focus {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
 }
 
 /* 圆形颜色选择按钮样式 */
@@ -406,28 +347,6 @@ form button[type="submit"]:hover {
   transform: scale(1.1);
 }
 
-button {
-  font-size: 1rem;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.button-container {
-  margin-bottom: 20px;
-}
-
-/* 诗句卡片容器 - 改为弹性布局，允许卡片自适应排列 */
-.poem-card-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center; /* 居中排列 */
-}
-
 /* 搜索框和添加按钮横排居中 */
 .search-add-wrapper {
   display: flex;
@@ -439,7 +358,8 @@ button {
 }
 
 #searchInput {
-  width: 300px; /* 固定宽度，不太宽 */
+  width: 100%;
+  max-width: 400px;
   padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 25px;
@@ -453,25 +373,6 @@ button {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-#toggleAddFormBtn {
-  background: var(--button-bg);
-  color: #fff;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
-}
-
-#toggleAddFormBtn:hover {
-  background: var(--button-hover-bg);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
-}
-
 form#addPoemForm {
   max-width: 500px;
   margin: 2rem auto;
@@ -479,6 +380,16 @@ form#addPoemForm {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-height: 0;
+  transition:
+    max-height 0.3s ease,
+    padding 0.3s ease;
+}
+
+form#addPoemForm.active {
+  max-height: 800px; /* 足够容纳表单内容 */
+  padding: 20px;
 }
 
 @media (min-width: 600px) {
@@ -487,10 +398,9 @@ form#addPoemForm {
   }
 }
 
-@media (max-width: 320px) {
-  #toggleSidebarBtn {
-    left: 5px;
-    padding: 4px 8px;
-    font-size: 1.2rem;
+/* 小屏幕适配 */
+@media (max-width: 768px) {
+  .poem-card {
+    max-width: calc(100% - 20px); /* 小屏幕每行1个卡片 */
   }
 }
