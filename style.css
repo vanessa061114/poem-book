@@ -190,6 +190,7 @@ form button[type="submit"]:hover {
   transition:
     transform 0.3s,
     box-shadow 0.3s;
+  height: auto; /* 自动适应内容高度 */
 }
 
 .poem-card-container {
@@ -244,6 +245,7 @@ form button[type="submit"]:hover {
   margin-top: 8px;
   box-shadow: none;
   background: transparent;
+  height: auto;
 }
 
 .poem-full.expanded {
@@ -257,6 +259,7 @@ form button[type="submit"]:hover {
   box-sizing: border-box;
   max-width: 100%;
   position: relative; /* 保持相对定位 */
+  height: auto;
 }
 
 .poem-line,
