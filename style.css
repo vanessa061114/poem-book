@@ -5,7 +5,7 @@
   --sidebar-bg: var(--main-color);
   --sidebar-text: #fff;
   --button-bg: var(--main-color);
-  --button-hover-calc: hsl(from var(--main-color) h s calc(l - 10%));
+  --button-hover-bg: color-mix(in srgb, var(--main-color) 80%, black 20%);
   --card-bg: #fff;
   --card-shadow: rgba(0, 0, 0, 0.1);
   --card-hover-shadow: rgba(0, 0, 0, 0.2);
