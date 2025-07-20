@@ -6,6 +6,7 @@ const pages = document.querySelectorAll(".page");
 const navButtons = sidebar.querySelectorAll("nav button");
 const themeColorSelect = document.getElementById("themeColor");
 const categories = ["唐诗", "宋词", "现代诗", "古风", "散文"];
+const cards = document.querySelectorAll('.poem-card');
 
 // 页面切换
 navButtons.forEach((btn) => {
@@ -15,6 +16,23 @@ navButtons.forEach((btn) => {
     const target = btn.getAttribute("data-page");
     pages.forEach((p) => p.classList.remove("active"));
     document.getElementById(target).classList.add("active");
+  });
+});
+
+cards.forEach(card => {
+  const poemFull = card.querySelector('.poem-full');
+  const expandBtn = card.querySelector('.expand-btn'); // 假设展开按钮有此类
+
+  expandBtn.addEventListener('click', () => {
+    poemFull.classList.toggle('expanded');
+    
+    // 关键：展开时固定卡片高度，展开后恢复
+    if (poemFull.classList.contains('expanded')) {
+      card.style.height = `${card.offsetHeight}px`;
+      setTimeout(() => {
+        card.style.height = 'auto';
+      }, 300); // 等待动画完成
+    }
   });
 });
 
