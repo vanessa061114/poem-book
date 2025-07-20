@@ -399,7 +399,7 @@ form#addPoemForm {
 
 form#addPoemForm.active {
   max-height: 800px; /* 足够容纳表单内容 */
-  padding: 20px;
+  padding: 20px 0 20px 0;
 }
 
 @media (min-width: 600px) {
