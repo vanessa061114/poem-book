@@ -173,6 +173,11 @@ function createPoemCard(poem, index) {
     </div>
   `;
 
+  setTimeout(() => {
+    const initialWidth = card.offsetWidth;
+    card.style.width = `${initialWidth}px`;
+  }, 0);
+
   // 点击“修改”按钮
   const editBtn = card.querySelector(".edit-btn");
   editBtn.addEventListener("click", (e) => {
