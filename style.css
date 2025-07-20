@@ -121,12 +121,11 @@ html {
   transition: all 0.3s;
 }
 
-/* 统一所有按钮的悬停效果 */
 #toggleSidebarBtn:hover,
 #toggleAddFormBtn:hover,
 .poem-actions button:hover,
-form button[type="submit"] {
-  background: var(--button-hover-calc);
+form button[type="submit"]:hover {
+  background: var(--button-hover-bg); /* ✅ 正确的变量名 */
 }
 
 #themeColor {
