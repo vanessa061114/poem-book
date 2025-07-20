@@ -178,7 +178,7 @@ form button[type="submit"]:hover {
   border-radius: 12px;
   margin: 10px;
   box-shadow: 0 2px 8px var(--card-shadow);
-  width: auto;
+  width: fit-content; /* ✅ 关键 */
   max-width: 90vw; /* 最大宽度，防止超出屏幕 */
   white-space: normal; /* 允许换行 */
   word-break: break-word;
@@ -253,7 +253,7 @@ form button[type="submit"]:hover {
   padding-top: 6px;
   box-sizing: border-box;
   /* 移除宽度相关限制 */
-  width: 100%;
+  width: fit-content; /* ✅ 关键点 */
   max-width: 100%;
 }
 
