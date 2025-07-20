@@ -6,7 +6,7 @@ const pages = document.querySelectorAll(".page");
 const navButtons = sidebar.querySelectorAll("nav button");
 const themeColorSelect = document.getElementById("themeColor");
 const categories = ["唐诗", "宋词", "现代诗", "古风", "散文"];
-const cards = document.querySelectorAll('.poem-card');
+const cards = document.querySelectorAll(".poem-card");
 
 // 页面切换
 navButtons.forEach((btn) => {
@@ -19,18 +19,18 @@ navButtons.forEach((btn) => {
   });
 });
 
-cards.forEach(card => {
-  const poemFull = card.querySelector('.poem-full');
-  const expandBtn = card.querySelector('.expand-btn'); // 假设展开按钮有此类
+cards.forEach((card) => {
+  const poemFull = card.querySelector(".poem-full");
+  const expandBtn = card.querySelector(".expand-btn"); // 假设展开按钮有此类
 
-  expandBtn.addEventListener('click', () => {
-    poemFull.classList.toggle('expanded');
-    
+  expandBtn.addEventListener("click", () => {
+    poemFull.classList.toggle("expanded");
+
     // 关键：展开时固定卡片高度，展开后恢复
-    if (poemFull.classList.contains('expanded')) {
+    if (poemFull.classList.contains("expanded")) {
       card.style.height = `${card.offsetHeight}px`;
       setTimeout(() => {
-        card.style.height = 'auto';
+        card.style.height = "auto";
       }, 300); // 等待动画完成
     }
   });
@@ -156,13 +156,13 @@ function renderCategories() {
   const categoryList = document.getElementById("categoryList");
   if (!categoryList) return;
   categoryList.innerHTML = "";
-  categories.forEach(cat => {
+  categories.forEach((cat) => {
     const li = document.createElement("li");
     li.style.listStyle = "none";
     li.style.margin = "8px 0";
     li.innerHTML = `
       <button style="width:100%;padding:8px;background:var(--button-bg);color:white;border:none;border-radius:4px;cursor:pointer">
-        ${cat} (${poems.filter(p => p.category === cat).length})
+        ${cat} (${poems.filter((p) => p.category === cat).length})
       </button>
     `;
     // 点击分类筛选诗句
