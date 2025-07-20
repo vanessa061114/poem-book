@@ -252,8 +252,6 @@ form button[type="submit"]:hover {
   line-height: 1.5;
   padding-top: 6px;
   box-sizing: border-box;
-  /* 移除宽度相关限制 */
-  width: fit-content; /* ✅ 关键点 */
   max-width: 100%;
 }
 
