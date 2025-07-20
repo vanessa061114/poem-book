@@ -173,7 +173,7 @@ form button[type="submit"]:hover {
 /* 诗句卡片 */
 .poem-card {
   display: grid; /* ✅ 使用 Grid 布局 */
-  grid-template-columns: 1fr; /* 单列布局 */
+  grid-template-rows: auto auto 1fr; /* 明确三行：诗句、标题、全诗 */
   align-items: start;
   background-color: var(--card-bg);
   padding: 10px 14px;
@@ -222,6 +222,8 @@ form button[type="submit"]:hover {
   font-size: 0.85rem;
   color: #666;
   margin-top: 6px;
+  position: relative; /* 确保相对于卡片定位 */
+  z-index: 1; /* 确保在全诗内容之上 */
 }
 
 .poem-full {
