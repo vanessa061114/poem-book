@@ -228,8 +228,11 @@ form button[type="submit"]:hover {
   white-space: pre-wrap; /* ✅ 支持换行和空格 */
   word-break: break-word;
   width: 100%; /* ✅ 不扩宽，跟随卡片 */
+  max-width: 100%;
   max-height: 0;
   overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
   transition:
     max-height 0.3s ease,
     padding 0.3s ease;
@@ -251,7 +254,7 @@ form button[type="submit"]:hover {
   box-sizing: border-box;
   /* 移除宽度相关限制 */
   width: 100%;
-  max-width: 90vw; /* 最大宽度限制，避免超屏 */
+  max-width: 100%;
 }
 
 .poem-line,
