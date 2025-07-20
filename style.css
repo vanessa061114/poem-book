@@ -8,6 +8,7 @@
   --sidebar-text: #fff;
   --button-bg: var(--main-color);
   --button-hover-bg: #2a7bcf;
+  --button-hover-calc: hsl(from var(--main-color) h s calc(l - 10%));
   --card-bg: #fff;
   --card-shadow: rgba(0, 0, 0, 0.1);
   --card-hover-shadow: rgba(0, 0, 0, 0.2);
@@ -88,6 +89,8 @@ header {
 }
 
 #main {
+  scrollbar-width: thin;
+  scrollbar-color: var(--main-color) transparent;
   margin: 20px auto;
   width: 100%;
   max-width: 800px;
@@ -128,6 +131,13 @@ header {
   cursor: pointer;
   user-select: none;
   transition: background 0.3s;
+}
+
+#toggleSidebarBtn:hover,
+#toggleAddFormBtn:hover,
+.poem-actions button:hover,
+form button[type="submit"]:hover {
+  background: var(--button-hover-calc);
 }
 
 #toggleSidebarBtn:hover {
@@ -183,7 +193,7 @@ header {
 /* 诗句卡片 */
 .poem-card {
   display: inline-block;
-  background-color: #f9f9f9;
+  background-color: var(--card-bg);
   padding: 10px 14px;
   border-radius: 12px;
   margin: 10px;
@@ -298,6 +308,13 @@ header {
 form {
   margin-top: 1rem;
   max-width: 400px;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 form label {
@@ -467,5 +484,13 @@ form#addPoemForm {
 @media (min-width: 600px) {
   .poem-card {
     text-align: left;
+  }
+}
+
+@media (max-width: 320px) {
+  #toggleSidebarBtn {
+    left: 5px;
+    padding: 4px 8px;
+    font-size: 1.2rem;
   }
 }
