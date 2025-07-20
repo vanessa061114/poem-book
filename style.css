@@ -193,8 +193,8 @@ form button[type="submit"]:hover {
 }
 
 .poem-card-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, max-content)); /* 自动适应宽度 */
   gap: 12px;
   justify-content: center;
   margin-top: 1rem;
