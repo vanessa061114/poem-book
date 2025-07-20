@@ -235,12 +235,13 @@ function formatPoem(text) {
 // 添加诗句表单显示切换
 if (toggleAddFormBtn && addPoemForm) {
   toggleAddFormBtn.addEventListener("click", () => {
-    if (addPoemForm.style.display === "block") {
-      addPoemForm.style.display = "none";
-      toggleAddFormBtn.textContent = "添加新诗句";
-    } else {
-      addPoemForm.style.display = "block";
+    // 只通过 active 类名控制，删除 display 相关代码
+    addPoemForm.classList.toggle("active");
+    // 同步修改按钮文字
+    if (addPoemForm.classList.contains("active")) {
       toggleAddFormBtn.textContent = "收起表单";
+    } else {
+      toggleAddFormBtn.textContent = "添加新诗句";
     }
   });
 }
@@ -274,7 +275,7 @@ if (addPoemForm) {
 
     renderPoems();
     addPoemForm.reset();
-    addPoemForm.style.display = "none";
+    addPoemForm.classList.remove("active");
     toggleAddFormBtn.textContent = "添加新诗句";
   });
 }
