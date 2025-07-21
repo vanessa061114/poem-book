@@ -35,27 +35,27 @@
         >
           <button
             class="color-btn"
-            style="background: #3498db"
+            style="background: #52a8e1"
             aria-label="主题色1"
           ></button>
           <button
             class="color-btn"
-            style="background: #e74c3c"
+            style="background: #f76f60"
             aria-label="主题色2"
           ></button>
           <button
             class="color-btn"
-            style="background: #2ecc71"
+            style="background: #7ed4a2"
             aria-label="主题色3"
           ></button>
           <button
             class="color-btn"
-            style="background: #9b59b6"
+            style="background: #be82d6"
             aria-label="主题色4"
           ></button>
           <button
             class="color-btn"
-            style="background: #f39c12"
+            style="background: #facc82"
             aria-label="主题色5"
           ></button>
         </div>
@@ -104,6 +104,9 @@
 
         <section id="categories" class="page">
           <h2>分类列表</h2>
+          <button id="manageCategoriesBtn" class="manage-categories-btn">
+            ⚙️ 管理分类
+          </button>
           <ul id="categoryList"></ul>
         </section>
 
@@ -118,7 +121,59 @@
         </section>
       </div>
 
+      <div id="categoryModal" class="modal-overlay">
+        <div class="modal">
+          <div class="modal-header">
+            <h3 class="modal-title">管理分类</h3>
+            <button class="close-modal">&times;</button>
+          </div>
+          <div id="currentCategories">
+            <!-- 动态生成当前分类列表 -->
+          </div>
+          <form id="addCategoryForm" class="add-category-form">
+            <input
+              type="text"
+              id="newCategoryName"
+              placeholder="输入新分类名称"
+            />
+            <button type="submit">添加</button>
+          </form>
+        </div>
+      </div>
+
       <script src="script.js"></script>
+    </div>
+    <div id="editPoemModal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">修改诗句</h3>
+          <button class="close-edit-modal">&times;</button>
+        </div>
+        <form id="editPoemForm">
+          <input type="hidden" id="editPoemId" />
+          <div class="edit-form-group">
+            <label for="editLine">诗句摘录</label>
+            <input type="text" id="editLine" required />
+          </div>
+          <div class="edit-form-group">
+            <label for="editTitle">原诗标题</label>
+            <input type="text" id="editTitle" required />
+          </div>
+          <div class="edit-form-group">
+            <label for="editAuthor">作者</label>
+            <input type="text" id="editAuthor" required />
+          </div>
+          <div class="edit-form-group">
+            <label for="editCategory">分类</label>
+            <select id="editCategory" required></select>
+          </div>
+          <div class="edit-form-group">
+            <label for="editFull">全文</label>
+            <textarea id="editFull" rows="4" required></textarea>
+          </div>
+          <button type="submit">保存修改</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>
