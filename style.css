@@ -5,14 +5,14 @@
   --sidebar-bg: var(--main-color);
   --sidebar-text: #fff;
   --button-bg: var(--main-color);
-  --button-hover-bg: color-mix(in srgb, var(--main-color) 80%, black 20%);
+  --button-hover-bg: rgba(52, 152, 219, 0.8);
   --card-bg: #fff;
   --card-shadow: rgba(0, 0, 0, 0.1);
   --card-hover-shadow: rgba(0, 0, 0, 0.2);
   --dark-bg-color: #1a1a1a;
   --dark-text-color: #f0f0f0;
   --dark-card-bg: #2c2c2c;
-  --dark-sidebar-bg: color-mix(in srgb, var(--main-color) 70%, black 30%);
+  --dark-sidebar-bg: rgba(52, 152, 219, 0.7);
 }
 
 * {
@@ -527,11 +527,10 @@ button:disabled {
 }
 
 .category-item:hover {
-  background-color: color-mix(in srgb, var(--card-bg) 90%, var(--text-color) 10%); /* 略微加深 */
-}
+  background-color: rgba(255, 255, 255, 0.1); 
 
 .category-item button {
-  background: color-mix(in srgb, var(--main-color) 30%, #ff0000 70%);
+  background: rgba(52, 152, 219, 0.3);
   color: white;
   border: none;
   border-radius: 4px;
@@ -542,11 +541,11 @@ button:disabled {
 
 .category-item button:hover {
   /* 添加悬停状态 */
-  background: color-mix(in srgb, var(--main-color) 20%, #ff0000 80%);
+  background: rgba(52, 152, 219, 0.5);
 }
 
 .delete-category {
-  background-color: color-mix(in srgb, var(--main-color) 30%, #ff0000 70%); /* 基于主色的红色变体 */
+  background-color: rgba(52, 152, 219, 0.3);
   color: white;
   border: none;
   border-radius: 4px;
@@ -556,16 +555,16 @@ button:disabled {
 }
 
 .delete-category:hover {
-  background-color: color-mix(in srgb, var(--main-color) 20%, #ff0000 80%); /* 略微加深 */
+  background-color: rgba(52, 152, 219, 0.5);
 }
 
 /* 模态框样式 */
 .modal-header {
-  border-bottom: 1px solid color-mix(in srgb, var(--main-color) 10%, transparent 90%); /* 基于主色的分割线 */
+  border-bottom: 1px solid rgba(52, 152, 219, 0.1); /* 主色10%透明度 */
 }
 
 .close-modal, .close-edit-modal {
-  color: color-mix(in srgb, var(--text-color) 50%, transparent 50%); /* 半透明文本色 */
+  color: rgba(51, 51, 51, 0.5); /* text-color #333 50%透明度 */
 }
 
 .close-modal:hover, .close-edit-modal:hover {
@@ -584,7 +583,7 @@ button:disabled {
 
 /* 表单元素 */
 input, select, textarea {
-  border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent 80%); /* 浅灰色边框 */
+  border: 1px solid rgba(51, 51, 51, 0.2);
   /* 添加过渡效果 */
   transition: 
     border-color 0.2s ease,
@@ -594,7 +593,7 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--main-color); /* 聚焦时使用主色 */
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--main-color) 20%, transparent 80%); /* 主色半透明阴影 */
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
   outline: none;
 }
 
@@ -624,7 +623,7 @@ a {
 .add-category-form input {
   flex: 1;
   padding: 10px 15px;
-  border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent 80%);
+  border: 1px solid rgba(51, 51, 51, 0.2);
   border-radius: 6px;
 }
 
