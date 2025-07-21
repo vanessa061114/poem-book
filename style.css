@@ -386,7 +386,7 @@ form#addPoemForm {
   max-width: 500px;
   margin: 2rem auto;
   background: #fff;
-  padding: 0 20px 0 20px;
+  padding: 0 20px !important; /* 强制左右内边距20px，上下0 */
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -397,7 +397,7 @@ form#addPoemForm {
 
 form#addPoemForm.active {
   max-height: 800px; /* 足够容纳表单内容 */
-  padding: 20px;
+  padding: 20px !important; /* 展开时上下内边距变为20px，左右保持20px */
 }
 
 @media (min-width: 600px) {
