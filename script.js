@@ -529,6 +529,36 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeAllModals();
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+  // 从localStorage加载主题色
+  const savedColor = localStorage.getItem('themeColor');
+  if (savedColor) {
+    setThemeColor(savedColor);
+    // 找到对应的颜色按钮并激活
+    const colorButtons = document.querySelectorAll('.color-btn');
+    colorButtons.forEach(btn => {
+      if (rgbToHex(btn.style.backgroundColor) === savedColor) {
+        btn.classList.add('active');
+      }
+    });
+  } else {
+    // 默认激活第一个颜色按钮
+    const firstColorBtn = document.querySelector('.color-btn');
+    if (firstColorBtn) {
+      firstColorBtn.classList.add('active');
+    }
+  }
+  if (searchInput) {
+    searchInput.value = '';
+  }
+  renderCategoryOptions();
+  renderPoems();
+  renderCategories();
+  renderAuthors();
+  renderAllPoems();
+});
+
+
 // 搜索监听
 if (searchInput) {
   searchInput.addEventListener("input", renderPoems);
