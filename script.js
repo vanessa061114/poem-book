@@ -5,8 +5,23 @@ const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
 const pages = document.querySelectorAll(".page");
 const navButtons = sidebar.querySelectorAll("nav button");
 const themeColorSelect = document.getElementById("themeColor");
-const categories = ["唐诗", "宋词", "现代诗", "古风", "散文"];
+let categories = JSON.parse(localStorage.getItem('categories')) || ['唐诗', '宋词', '现代诗', '古风', '散文'];
 const cards = document.querySelectorAll(".poem-card");
+const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
+const categoryModal = document.getElementById('categoryModal');
+const closeModalBtn = document.querySelector('.close-modal');
+const currentCategories = document.getElementById('currentCategories');
+const addCategoryForm = document.getElementById('addCategoryForm');
+const newCategoryName = document.getElementById('newCategoryName');
+const editPoemModal = document.getElementById("editPoemModal");
+const closeEditModal = document.querySelector(".close-edit-modal");
+const editPoemForm = document.getElementById("editPoemForm");
+const editCategory = document.getElementById("editCategory");
+const editPoemId = document.getElementById('editPoemId');
+const editLine = document.getElementById('editLine');
+const editTitle = document.getElementById('editTitle');
+const editAuthor = document.getElementById('editAuthor');
+const editFull = document.getElementById('editFull');
 
 // 页面切换
 navButtons.forEach((btn) => {
@@ -16,23 +31,6 @@ navButtons.forEach((btn) => {
     const target = btn.getAttribute("data-page");
     pages.forEach((p) => p.classList.remove("active"));
     document.getElementById(target).classList.add("active");
-  });
-});
-
-cards.forEach((card) => {
-  const poemFull = card.querySelector(".poem-full");
-  const expandBtn = card.querySelector(".expand-btn"); // 假设展开按钮有此类
-
-  expandBtn.addEventListener("click", () => {
-    poemFull.classList.toggle("expanded");
-
-    // 关键：展开时固定卡片高度，展开后恢复
-    if (poemFull.classList.contains("expanded")) {
-      card.style.height = `${card.offsetHeight}px`;
-      setTimeout(() => {
-        card.style.height = "auto";
-      }, 300); // 等待动画完成
-    }
   });
 });
 
@@ -151,11 +149,29 @@ function renderPoems() {
   });
 }
 
-// 渲染分类列表
+// 渲染分类列表（修改后）
 function renderCategories() {
   const categoryList = document.getElementById("categoryList");
   if (!categoryList) return;
   categoryList.innerHTML = "";
+  
+  // 添加"全部"分类
+  const allLi = document.createElement("li");
+  allLi.style.listStyle = "none";
+  allLi.style.margin = "8px 0";
+  allLi.innerHTML = `
+    <button style="width:100%;padding:8px;background:var(--button-bg);color:white;border:none;border-radius:4px;cursor:pointer">
+      全部 (${poems.length})
+    </button>
+  `;
+  allLi.querySelector("button").addEventListener("click", () => {
+    document.querySelector('[data-page="home"]').click();
+    searchInput.value = "";
+    renderPoems();
+  });
+  categoryList.appendChild(allLi);
+  
+  // 添加各个分类
   categories.forEach((cat) => {
     const li = document.createElement("li");
     li.style.listStyle = "none";
@@ -165,9 +181,7 @@ function renderCategories() {
         ${cat} (${poems.filter((p) => p.category === cat).length})
       </button>
     `;
-    // 点击分类筛选诗句
     li.querySelector("button").addEventListener("click", () => {
-      // 切换到首页并筛选
       document.querySelector('[data-page="home"]').click();
       searchInput.value = cat;
       renderPoems();
@@ -200,7 +214,7 @@ function createPoemCard(poem, index) {
   const editBtn = card.querySelector(".edit-btn");
   editBtn.addEventListener("click", (e) => {
     e.stopPropagation(); // 防止触发展开全文
-    editPoem(index);
+    openEditModal(index); 
   });
 
   // 点击“删除”按钮
@@ -365,25 +379,155 @@ function deletePoem(index) {
   renderPoems(); // ✅ 改回你实际使用的渲染函数
 }
 
-function editPoem(index) {
+function openEditModal(index) {
   const poem = poems[index];
-  const newLine = prompt("修改诗句：", poem.line);
-  const newTitle = prompt("修改标题：", poem.title);
-  const newAuthor = prompt("修改作者：", poem.author);
-  const newFull = prompt("修改全文（可选）：", poem.full);
-
-  if (newLine && newTitle && newAuthor) {
-    poems[index] = {
-      ...poem,
-      line: newLine,
-      title: newTitle,
-      author: newAuthor,
-      full: newFull || poem.full,
-    };
-    localStorage.setItem("poems", JSON.stringify(poems));
-    renderPoems();
-  }
+  editPoemId.value = poem.id;
+  editLine.value = poem.line;
+  editTitle.value = poem.title;
+  editAuthor.value = poem.author;
+  editFull.value = poem.full;
+  
+  // 只需要调用一次渲染分类选项的函数
+  renderEditCategoryOptions(poem.category);
+  
+  editPoemModal.classList.add('active');
 }
+
+// 渲染编辑表单中的分类选项
+function renderEditCategoryOptions(poemCategory) {
+  if (!editCategory) return;
+  editCategory.innerHTML = '';
+  categories.forEach(cat => {
+    const option = document.createElement('option');
+    option.value = cat;
+    option.textContent = cat;
+    if (cat === poemCategory) {
+      option.selected = true;
+    }
+    editCategory.appendChild(option);
+  });
+}
+
+closeEditModal.addEventListener('click', () => {
+  editPoemModal.classList.remove('active');
+});
+
+editPoemForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const id = parseInt(editPoemId.value);
+  const index = poems.findIndex(p => p.id === id);
+  
+  if (index !== -1) {
+    poems[index] = {
+      ...poems[index],
+      line: editLine.value.trim(),
+      title: editTitle.value.trim(),
+      author: editAuthor.value.trim(),
+      category: editCategory.value,
+      full: editFull.value.trim()
+    };
+    
+    localStorage.setItem('poems', JSON.stringify(poems));
+    renderPoems(); // 重新渲染诗句列表
+    editPoemModal.classList.remove('active'); // 关闭弹窗
+  }
+});
+
+function closeAllModals() {
+  if (categoryModal) categoryModal.classList.remove('active');
+  if (editPoemModal) editPoemModal.classList.remove('active');
+}
+
+function renderCurrentCategories() {
+  currentCategories.innerHTML = '';
+  categories.forEach((cat, index) => {
+    const div = document.createElement('div');
+    div.className = 'category-item';
+    div.innerHTML = `
+      <span>${cat}</span>
+      <button class="delete-category" data-index="${index}">删除</button>
+    `;
+    currentCategories.appendChild(div);
+  });
+
+  // 绑定删除分类事件
+  document.querySelectorAll('.delete-category').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt(e.target.dataset.index);
+      const catToDelete = categories[index];
+      
+      // 检查是否有诗句使用该分类
+      const hasPoems = poems.some(p => p.category === catToDelete);
+      if (hasPoems && !confirm(`该分类下有${poems.filter(p => p.category === catToDelete).length}条诗句，删除后将移至"未分类"，确定删除吗？`)) {
+        return;
+      }
+      
+      // 更新诗句分类（移至未分类）
+      poems = poems.map(p => 
+        p.category === catToDelete ? { ...p, category: '未分类' } : p
+      );
+      
+      // 删除分类
+      categories.splice(index, 1);
+      localStorage.setItem('categories', JSON.stringify(categories));
+      localStorage.setItem('poems', JSON.stringify(poems));
+      
+      // 重新渲染
+      renderCurrentCategories();
+      renderCategories();
+      renderCategoryOptions();
+    });
+  });
+}
+
+// 添加新分类
+addCategoryForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const newCat = newCategoryName.value.trim();
+  
+  if (!newCat) {
+    alert('请输入分类名称');
+    return;
+  }
+  
+  if (categories.includes(newCat)) {
+    alert('该分类已存在');
+    return;
+  }
+  
+  categories.push(newCat);
+  localStorage.setItem('categories', JSON.stringify(categories));
+  
+  // 重新渲染相关UI
+  newCategoryName.value = '';
+  renderCurrentCategories();
+  renderCategories();
+  renderCategoryOptions();
+  // 如果编辑模态框打开，也更新其分类选项
+  if (editPoemModal.classList.contains('active')) {
+    renderEditCategoryOptions(editCategory.value);
+  }
+});
+
+// 打开分类管理弹窗
+manageCategoriesBtn.addEventListener('click', () => {
+  categoryModal.classList.add('active');
+  renderCurrentCategories(); // 渲染当前分类列表
+});
+
+// 关闭分类管理弹窗
+closeModalBtn.addEventListener('click', () => {
+  categoryModal.classList.remove('active');
+});
+
+document.addEventListener('click', (e) => {
+  if (e.target === categoryModal) closeAllModals();
+  if (e.target === editPoemModal) closeAllModals();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeAllModals();
+});
 
 // 搜索监听
 if (searchInput) {
