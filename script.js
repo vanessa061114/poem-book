@@ -1,11 +1,11 @@
-let poems = JSON.parse(localStorage.getItem("poems")) || [];
+let poems = [];
 // 页面元素
 const sidebar = document.getElementById("sidebar");
 const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
 const pages = document.querySelectorAll(".page");
 const navButtons = sidebar.querySelectorAll("nav button");
 const themeColorSelect = document.getElementById("themeColor");
-let categories = JSON.parse(localStorage.getItem('categories')) || ['唐诗', '宋词', '现代诗', '古风', '散文'];
+let categories = [];
 const cards = document.querySelectorAll(".poem-card");
 const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
 const categoryModal = document.getElementById('categoryModal');
@@ -57,6 +57,71 @@ colorButtons.forEach((btn) => {
     setThemeColor(hexColor);
   });
 });
+
+// 数据初始化函数
+function initializeApp() {
+  // 从localStorage加载数据并验证
+  try {
+    const savedPoems = localStorage.getItem("poems");
+    if (savedPoems) {
+      poems = JSON.parse(savedPoems);
+      // 验证数据格式是否正确
+      if (!Array.isArray(poems)) {
+        poems = [];
+        throw new Error("Invalid poems data format");
+      }
+    } else {
+      poems = [];
+    }
+    
+    const savedCategories = localStorage.getItem('categories');
+    if (savedCategories) {
+      categories = JSON.parse(savedCategories);
+      if (!Array.isArray(categories)) {
+        categories = ['唐诗', '宋词', '现代诗', '古风', '散文'];
+        throw new Error("Invalid categories data format");
+      }
+    } else {
+      categories = ['唐诗', '宋词', '现代诗', '古风', '散文'];
+    }
+  } catch (error) {
+    console.error("Failed to load data from localStorage:", error);
+    alert("加载数据失败，将使用空数据");
+    poems = [];
+    categories = ['唐诗', '宋词', '现代诗', '古风', '散文'];
+  }
+
+  // 从localStorage加载主题色
+  const savedColor = localStorage.getItem('themeColor');
+  if (savedColor) {
+    setThemeColor(savedColor);
+    // 找到对应的颜色按钮并激活
+    const colorButtons = document.querySelectorAll('.color-btn');
+    colorButtons.forEach(btn => {
+      if (rgbToHex(btn.style.backgroundColor) === savedColor) {
+        btn.classList.add('active');
+      }
+    });
+  } else {
+    // 默认激活第一个颜色按钮
+    const firstColorBtn = document.querySelector('.color-btn');
+    if (firstColorBtn) {
+      firstColorBtn.classList.add('active');
+    }
+  }
+
+  // 初始化UI
+  if (searchInput) {
+    searchInput.value = '';
+  }
+  renderCategoryOptions();
+  renderPoems();
+  renderCategories();
+  renderAuthors();
+  renderAllPoems();
+}
+
+document.addEventListener('DOMContentLoaded', initializeApp);
 
 function shadeColor(color, percent) {
   // color 是 '#xxxxxx' 格式，percent 是正负数字（改变亮度）
@@ -529,44 +594,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeAllModals();
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-  // 从localStorage加载主题色
-  const savedColor = localStorage.getItem('themeColor');
-  if (savedColor) {
-    setThemeColor(savedColor);
-    // 找到对应的颜色按钮并激活
-    const colorButtons = document.querySelectorAll('.color-btn');
-    colorButtons.forEach(btn => {
-      if (rgbToHex(btn.style.backgroundColor) === savedColor) {
-        btn.classList.add('active');
-      }
-    });
-  } else {
-    // 默认激活第一个颜色按钮
-    const firstColorBtn = document.querySelector('.color-btn');
-    if (firstColorBtn) {
-      firstColorBtn.classList.add('active');
-    }
-  }
-  if (searchInput) {
-    searchInput.value = '';
-  }
-  renderCategoryOptions();
-  renderPoems();
-  renderCategories();
-  renderAuthors();
-  renderAllPoems();
-});
-
-
 // 搜索监听
 if (searchInput) {
   searchInput.addEventListener("input", renderPoems);
 }
-
-// 初始化
-renderCategoryOptions();
-renderPoems();
-renderCategories(); // 新增调用
-renderAuthors();
-renderAllPoems();
