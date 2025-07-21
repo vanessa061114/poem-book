@@ -9,6 +9,10 @@
   --card-bg: #fff;
   --card-shadow: rgba(0, 0, 0, 0.1);
   --card-hover-shadow: rgba(0, 0, 0, 0.2);
+  --dark-bg-color: #1a1a1a;
+  --dark-text-color: #f0f0f0;
+  --dark-card-bg: #2c2c2c;
+  --dark-sidebar-bg: color-mix(in srgb, var(--main-color) 70%, black 30%);
 }
 
 * {
@@ -67,7 +71,7 @@ html {
   background: none;
   border: none;
   color: var(--sidebar-text);
-  padding: 10px 0;
+  padding: 10px 15px;
   text-align: left;
   font-size: 1rem;
   cursor: pointer;
@@ -76,8 +80,13 @@ html {
   transition: background 0.2s;
 }
 
-#sidebar nav button:hover,
 #sidebar nav button.active {
+  /* 增强激活状态 */
+  background: rgba(255,255,255,0.2);
+  font-weight: 600;
+}
+
+#sidebar nav button:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
@@ -303,14 +312,6 @@ form {
   max-width: 400px;
 }
 
-form input:focus,
-form select:focus,
-form textarea:focus {
-  border-color: var(--main-color);
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-  outline: none;
-}
-
 form label {
   display: block;
   margin-top: 12px;
@@ -396,8 +397,256 @@ form#addPoemForm {
 }
 
 form#addPoemForm.active {
-  max-height: 800px; /* 足够容纳表单内容 */
+  max-height: 8000px;
   padding: 20px !important; /* 展开时上下内边距变为20px，左右保持20px */
+}
+
+/* 按钮交互增强 */
+button {
+  background: var(--button-bg);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: 
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
+}
+
+button:hover {
+  background: var(--button-hover-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 分类管理按钮 */
+.manage-categories-btn {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transform: scale(0.95);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.modal-overlay.active .modal {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.close-modal:hover {
+  color: var(--text-color);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background-color: var(--card-bg);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.category-item:hover {
+  background-color: color-mix(in srgb, var(--card-bg) 90%, var(--text-color) 10%); /* 略微加深 */
+}
+
+.category-item button {
+  background: color-mix(in srgb, var(--main-color) 30%, #ff0000 70%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.category-item button:hover {
+  /* 添加悬停状态 */
+  background: color-mix(in srgb, var(--main-color) 20%, #ff0000 80%);
+}
+
+.delete-category {
+  background-color: color-mix(in srgb, var(--main-color) 30%, #ff0000 70%); /* 基于主色的红色变体 */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.delete-category:hover {
+  background-color: color-mix(in srgb, var(--main-color) 20%, #ff0000 80%); /* 略微加深 */
+}
+
+/* 模态框样式 */
+.modal-header {
+  border-bottom: 1px solid color-mix(in srgb, var(--main-color) 10%, transparent 90%); /* 基于主色的分割线 */
+}
+
+.close-modal, .close-edit-modal {
+  color: color-mix(in srgb, var(--text-color) 50%, transparent 50%); /* 半透明文本色 */
+}
+
+.close-modal:hover, .close-edit-modal:hover {
+  color: var(--text-color); /* 悬停时显示完整文本色 */
+}
+
+/* 侧边栏分类列表 */
+#categoryList button {
+  background-color: rgba(255, 255, 255, 0.1); /* 保持现有透明度 */
+  color: var(--sidebar-text); /* 使用侧边栏文本色变量 */
+}
+
+#categoryList button:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* 保持现有透明度 */
+}
+
+/* 表单元素 */
+input, select, textarea {
+  border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent 80%); /* 浅灰色边框 */
+  /* 添加过渡效果 */
+  transition: 
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--main-color); /* 聚焦时使用主色 */
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--main-color) 20%, transparent 80%); /* 主色半透明阴影 */
+  outline: none;
+}
+
+button[type="submit"] {
+  background-color: var(--button-bg); /* 使用按钮背景色变量 */
+}
+
+button[type="submit"]:hover {
+  background-color: var(--button-hover-bg); /* 使用按钮悬停背景色变量 */
+}
+
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+a {
+  cursor: pointer;
+}
+
+.add-category-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.add-category-form input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent 80%);
+  border-radius: 6px;
+}
+
+.add-category-form button:hover {
+  /* 添加悬停状态 */
+  background: var(--button-hover-bg);
+}
+
+.add-category-form button {
+  background: var(--button-bg);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+/* 颜色选择器增强 */
+.color-btn.active {
+  /* 添加激活状态指示 */
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px var(--main-color), 0 2px 4px rgba(0,0,0,0.2);
 }
 
 @media (min-width: 600px) {
@@ -410,5 +659,27 @@ form#addPoemForm.active {
 @media (max-width: 768px) {
   .poem-card {
     max-width: calc(100% - 20px); /* 小屏幕每行1个卡片 */
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: var(--dark-bg-color);
+    --text-color: var(--dark-text-color);
+    --card-bg: var(--dark-card-bg);
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    --card-hover-shadow: rgba(0, 0, 0, 0.4);
+    --sidebar-bg: var(--dark-sidebar-bg);
+  }
+  
+  /* 增强深色模式下的侧边栏菜单按钮 */
+  #sidebar nav button {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  #sidebar nav button:hover,
+  #sidebar nav button.active {
+    background: rgba(255, 255, 255, 0.15);
   }
 }
