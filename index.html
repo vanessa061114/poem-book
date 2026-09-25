@@ -1,179 +1,423 @@
 <!DOCTYPE html>
-<html lang="zh">
+
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PoemBook 诗句收藏</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#66736b" />
+    <title>PoemBook · 诗句收藏</title>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
-    <div class="content-wrapper">
-      <button id="toggleSidebarBtn" aria-label="切换侧栏">☰</button>
+    <!-- ==================== 侧边栏 ==================== -->
 
-      <div id="sidebar" class="hidden">
-        <nav>
-          <button data-page="home" class="active">首页</button>
-          <button data-page="categories">分类</button>
-          <button data-page="allPoems">全部诗句</button>
-          <button data-page="authors">作者</button>
-        </nav>
-
-        <!-- 主题色选择，用select或者按钮 -->
-        <label for="themeColor" style="display: none">主题色</label>
-        <select id="themeColor" style="width: 100%; margin-top: 1rem">
-          <option value="#3498db">天空蓝</option>
-          <option value="#e74c3c">热情红</option>
-          <option value="#2ecc71">清新绿</option>
-          <option value="#9b59b6">梦幻紫</option>
-          <option value="#f39c12">橘子黄</option>
-        </select>
-
-        <!-- 颜色按钮 -->
-        <div
-          id="themeSelector"
-          style="margin-top: auto; display: flex; gap: 8px; padding-top: 1rem"
-        >
-          <button
-            class="color-btn"
-            style="background: #52a8e1"
-            aria-label="主题色1"
-          ></button>
-          <button
-            class="color-btn"
-            style="background: #f76f60"
-            aria-label="主题色2"
-          ></button>
-          <button
-            class="color-btn"
-            style="background: #7ed4a2"
-            aria-label="主题色3"
-          ></button>
-          <button
-            class="color-btn"
-            style="background: #be82d6"
-            aria-label="主题色4"
-          ></button>
-          <button
-            class="color-btn"
-            style="background: #facc82"
-            aria-label="主题色5"
-          ></button>
+    <aside id="sidebar">
+      ```
+      <div class="sidebar-top">
+        <div class="brand">
+          <div class="brand-name">PoemBook</div>
+          <div class="brand-subtitle">诗句收藏</div>
         </div>
+
+        <nav class="main-nav">
+          <button class="nav-item active" data-page="home">
+            <span class="nav-icon">⌂</span>
+            <span>首页</span>
+          </button>
+
+          <button class="nav-item" data-page="categories">
+            <span class="nav-icon">◇</span>
+            <span>分类</span>
+          </button>
+
+          <button class="nav-item" data-page="allPoems">
+            <span class="nav-icon">▤</span>
+            <span>全部诗句</span>
+          </button>
+
+          <button class="nav-item" data-page="authors">
+            <span class="nav-icon">人</span>
+            <span>作者</span>
+          </button>
+        </nav>
       </div>
 
-      <!-- 主内容区 -->
-      <div id="main">
-        <section id="home" class="page active">
-          <div class="search-add-wrapper">
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="搜索诗句或作者..."
-            />
-            <button id="toggleAddFormBtn">添加新诗句</button>
+      <div class="sidebar-bottom">
+        <div class="collection-info">
+          <span>我的收藏</span>
+          <strong id="poemCount">0</strong>
+        </div>
+
+        <div class="theme-section">
+          <div class="theme-label">主题</div>
+
+          <div id="themeSelector">
+            <button
+              class="color-btn active"
+              data-color="#66736b"
+              style="--color: #66736b"
+              aria-label="竹青"
+              title="竹青"
+            ></button>
+
+            <button
+              class="color-btn"
+              data-color="#596b7a"
+              style="--color: #596b7a"
+              aria-label="黛蓝"
+              title="黛蓝"
+            ></button>
+
+            <button
+              class="color-btn"
+              data-color="#9a7560"
+              style="--color: #9a7560"
+              aria-label="赭石"
+              title="赭石"
+            ></button>
+
+            <button
+              class="color-btn"
+              data-color="#8a8067"
+              style="--color: #8a8067"
+              aria-label="茶褐"
+              title="茶褐"
+            ></button>
+
+            <button
+              class="color-btn"
+              data-color="#8c6f7a"
+              style="--color: #8c6f7a"
+              aria-label="紫灰"
+              title="紫灰"
+            ></button>
+          </div>
+        </div>
+      </div>
+      ```
+    </aside>
+
+    <!-- ==================== 移动端 / 侧栏开关 ==================== -->
+
+    <button
+      id="toggleSidebarBtn"
+      class="menu-button"
+      aria-label="打开菜单"
+      title="菜单"
+    >
+      ``` ☰ ```
+    </button>
+
+    <!-- ==================== 页面主体 ==================== -->
+
+    <main id="main">
+      ```
+      <!-- ==================== 首页 ==================== -->
+
+      <section id="home" class="page active">
+        <header class="home-header">
+          <div class="home-heading">
+            <p class="eyebrow">POEMBOOK</p>
+            <h1>我的诗句收藏</h1>
+            <p class="home-description">
+              那些曾经让我停下来读过的句子，都留在这里。
+            </p>
           </div>
 
-          <form id="addPoemForm">
-            <label for="newLine">诗句摘录</label>
-            <input
-              type="text"
+          <button id="toggleAddFormBtn" class="primary-button">
+            <span>＋</span>
+            收藏诗句
+          </button>
+        </header>
+
+        <!-- 搜索 -->
+
+        <div class="search-wrapper">
+          <span class="search-icon">⌕</span>
+
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="搜索诗句、诗名或作者……"
+            autocomplete="off"
+          />
+
+          <button
+            id="clearSearchBtn"
+            class="clear-search"
+            type="button"
+            aria-label="清除搜索"
+          >
+            ×
+          </button>
+        </div>
+
+        <!-- ==================== 添加诗句 ==================== -->
+
+        <form id="addPoemForm" class="poem-form">
+          <div class="form-heading">
+            <div>
+              <p class="form-eyebrow">NEW COLLECTION</p>
+              <h2>收藏一首诗</h2>
+            </div>
+
+            <button
+              type="button"
+              id="closeAddFormBtn"
+              class="form-close"
+              aria-label="关闭"
+            >
+              ×
+            </button>
+          </div>
+
+          <div class="form-group featured-field">
+            <label for="newLine">你喜欢的句子</label>
+
+            <textarea
               id="newLine"
+              rows="3"
               required
-              placeholder="请输入你喜欢的诗句"
-            />
-            <label for="newTitle">原诗标题</label>
-            <input type="text" id="newTitle" required placeholder="原诗名称" />
-            <label for="newAuthor">作者</label>
-            <input type="text" id="newAuthor" required placeholder="诗歌作者" />
+              placeholder="摘下这一首诗里最想留下的句子……"
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newTitle">诗名</label>
+
+              <input
+                type="text"
+                id="newTitle"
+                required
+                placeholder="原诗名称"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="newAuthor">作者</label>
+
+              <input type="text" id="newAuthor" required placeholder="作者" />
+            </div>
+          </div>
+
+          <div class="form-group">
             <label for="newCategory">分类</label>
+
             <select id="newCategory" required>
-              <option disabled selected>请选择分类</option>
+              <option value="" disabled selected>选择一个分类</option>
             </select>
+          </div>
+
+          <div class="form-group">
             <label for="newFull">全文</label>
+
             <textarea
               id="newFull"
-              rows="4"
+              rows="8"
               required
-              placeholder="输入完整诗文"
+              placeholder="在这里输入完整诗文……"
             ></textarea>
-            <button type="submit">添加诗句</button>
-          </form>
+          </div>
 
-          <div id="poemList" class="poem-card-container"></div>
-        </section>
+          <div class="form-actions">
+            <button type="button" id="cancelAddBtn" class="secondary-button">
+              取消
+            </button>
 
-        <section id="categories" class="page">
-          <h2>分类列表</h2>
-          <button id="manageCategoriesBtn" class="manage-categories-btn">
-            ⚙️ 管理分类
+            <button type="submit" class="primary-button">保存收藏</button>
+          </div>
+        </form>
+
+        <!-- ==================== 当前筛选提示 ==================== -->
+
+        <div id="filterInfo" class="filter-info hidden">
+          <span id="filterText"></span>
+
+          <button id="clearFilterBtn" type="button">清除筛选</button>
+        </div>
+
+        <!-- ==================== 诗句卡片 ==================== -->
+
+        <div id="poemList" class="poem-card-container"></div>
+
+        <!-- 空状态 -->
+
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-mark">「 」</div>
+
+          <h3>这里还没有诗句</h3>
+
+          <p>收藏一句你喜欢的话，让这本诗句簿慢慢长起来。</p>
+
+          <button id="emptyAddBtn" class="secondary-button" type="button">
+            收藏第一句
           </button>
-          <ul id="categoryList"></ul>
-        </section>
-
-        <section id="allPoems" class="page">
-          <h2>全部诗句</h2>
-          <div id="allPoemList"></div>
-        </section>
-
-        <section id="authors" class="page">
-          <h2>作者列表</h2>
-          <div id="authorList"></div>
-        </section>
-      </div>
-
-      <div id="categoryModal" class="modal-overlay">
-        <div class="modal">
-          <div class="modal-header">
-            <h3 class="modal-title">管理分类</h3>
-            <button class="close-modal">&times;</button>
-          </div>
-          <div id="currentCategories">
-            <!-- 动态生成当前分类列表 -->
-          </div>
-          <form id="addCategoryForm" class="add-category-form">
-            <input
-              type="text"
-              id="newCategoryName"
-              placeholder="输入新分类名称"
-            />
-            <button type="submit">添加</button>
-          </form>
         </div>
-      </div>
+      </section>
 
-      <script src="script.js"></script>
-    </div>
-    <div id="editPoemModal" class="modal-overlay">
-      <div class="modal">
+      <!-- ==================== 分类 ==================== -->
+
+      <section id="categories" class="page">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">CATEGORIES</p>
+            <h1>分类</h1>
+            <p>按照你自己的方式整理这些诗句。</p>
+          </div>
+
+          <button
+            id="manageCategoriesBtn"
+            class="secondary-button"
+            type="button"
+          >
+            管理分类
+          </button>
+        </header>
+
+        <div id="categoryList" class="category-grid"></div>
+      </section>
+
+      <!-- ==================== 全部诗句 ==================== -->
+
+      <section id="allPoems" class="page">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">ALL POEMS</p>
+            <h1>全部诗句</h1>
+            <p>你收藏过的所有诗句。</p>
+          </div>
+        </header>
+
+        <div id="allPoemList" class="all-poem-list"></div>
+      </section>
+
+      <!-- ==================== 作者 ==================== -->
+
+      <section id="authors" class="page">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">AUTHORS</p>
+            <h1>作者</h1>
+            <p>看看哪些文字曾经被你留下。</p>
+          </div>
+        </header>
+
+        <div id="authorList" class="author-grid"></div>
+      </section>
+      ```
+    </main>
+
+    <!-- ==================== 分类管理弹窗 ==================== -->
+
+    <div id="categoryModal" class="modal-overlay">
+      ```
+      <div class="modal category-modal">
         <div class="modal-header">
-          <h3 class="modal-title">修改诗句</h3>
-          <button class="close-edit-modal">&times;</button>
+          <div>
+            <p class="form-eyebrow">CATEGORIES</p>
+            <h2>管理分类</h2>
+          </div>
+
+          <button
+            class="close-modal modal-close"
+            type="button"
+            aria-label="关闭"
+          >
+            ×
+          </button>
         </div>
-        <form id="editPoemForm">
-          <input type="hidden" id="editPoemId" />
-          <div class="edit-form-group">
-            <label for="editLine">诗句摘录</label>
-            <input type="text" id="editLine" required />
-          </div>
-          <div class="edit-form-group">
-            <label for="editTitle">原诗标题</label>
-            <input type="text" id="editTitle" required />
-          </div>
-          <div class="edit-form-group">
-            <label for="editAuthor">作者</label>
-            <input type="text" id="editAuthor" required />
-          </div>
-          <div class="edit-form-group">
-            <label for="editCategory">分类</label>
-            <select id="editCategory" required></select>
-          </div>
-          <div class="edit-form-group">
-            <label for="editFull">全文</label>
-            <textarea id="editFull" rows="4" required></textarea>
-          </div>
-          <button type="submit">保存修改</button>
+
+        <div id="currentCategories" class="current-categories">
+          <!-- JS 动态生成 -->
+        </div>
+
+        <form id="addCategoryForm" class="add-category-form">
+          <input
+            type="text"
+            id="newCategoryName"
+            placeholder="输入新的分类名称"
+            autocomplete="off"
+          />
+
+          <button type="submit" class="primary-button">添加</button>
         </form>
       </div>
+      ```
     </div>
+
+    <!-- ==================== 编辑诗句弹窗 ==================== -->
+
+    <div id="editPoemModal" class="modal-overlay">
+      ```
+      <div class="modal edit-modal">
+        <div class="modal-header">
+          <div>
+            <p class="form-eyebrow">EDIT COLLECTION</p>
+            <h2>修改诗句</h2>
+          </div>
+
+          <button
+            class="close-edit-modal modal-close"
+            type="button"
+            aria-label="关闭"
+          >
+            ×
+          </button>
+        </div>
+
+        <form id="editPoemForm">
+          <input type="hidden" id="editPoemId" />
+
+          <div class="form-group featured-field">
+            <label for="editLine">你喜欢的句子</label>
+
+            <textarea id="editLine" rows="3" required></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editTitle">诗名</label>
+
+              <input type="text" id="editTitle" required />
+            </div>
+
+            <div class="form-group">
+              <label for="editAuthor">作者</label>
+
+              <input type="text" id="editAuthor" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="editCategory">分类</label>
+
+            <select id="editCategory" required></select>
+          </div>
+
+          <div class="form-group">
+            <label for="editFull">全文</label>
+
+            <textarea id="editFull" rows="8" required></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="cancelEditBtn" class="secondary-button">
+              取消
+            </button>
+
+            <button type="submit" class="primary-button">保存修改</button>
+          </div>
+        </form>
+      </div>
+      ```
+    </div>
+
+    <!-- ==================== Toast 提示 ==================== -->
+
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
   </body>
 </html>
