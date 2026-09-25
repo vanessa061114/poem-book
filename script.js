@@ -1,130 +1,96 @@
 let poems = [];
-// 页面元素
+let categories = [];
+
+// ==================== 页面元素 ====================
+
 const sidebar = document.getElementById("sidebar");
 const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
 const pages = document.querySelectorAll(".page");
-const navButtons = sidebar.querySelectorAll("nav button");
+const navButtons = sidebar ? sidebar.querySelectorAll("nav button") : [];
+
 const themeColorSelect = document.getElementById("themeColor");
-let categories = [];
-const cards = document.querySelectorAll(".poem-card");
-const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
-const categoryModal = document.getElementById('categoryModal');
-const closeModalBtn = document.querySelector('.close-modal');
-const currentCategories = document.getElementById('currentCategories');
-const addCategoryForm = document.getElementById('addCategoryForm');
-const newCategoryName = document.getElementById('newCategoryName');
+const colorButtons = document.querySelectorAll(".color-btn");
+
+const toggleAddFormBtn = document.getElementById("toggleAddFormBtn");
+const addPoemForm = document.getElementById("addPoemForm");
+const newCategorySelect = document.getElementById("newCategory");
+const poemList = document.getElementById("poemList");
+const searchInput = document.getElementById("searchInput");
+
+const manageCategoriesBtn = document.getElementById("manageCategoriesBtn");
+const categoryModal = document.getElementById("categoryModal");
+const closeModalBtn = document.querySelector(".close-modal");
+const currentCategories = document.getElementById("currentCategories");
+const addCategoryForm = document.getElementById("addCategoryForm");
+const newCategoryName = document.getElementById("newCategoryName");
+
 const editPoemModal = document.getElementById("editPoemModal");
 const closeEditModal = document.querySelector(".close-edit-modal");
 const editPoemForm = document.getElementById("editPoemForm");
 const editCategory = document.getElementById("editCategory");
-const editPoemId = document.getElementById('editPoemId');
-const editLine = document.getElementById('editLine');
-const editTitle = document.getElementById('editTitle');
-const editAuthor = document.getElementById('editAuthor');
-const editFull = document.getElementById('editFull');
+const editPoemId = document.getElementById("editPoemId");
+const editLine = document.getElementById("editLine");
+const editTitle = document.getElementById("editTitle");
+const editAuthor = document.getElementById("editAuthor");
+const editFull = document.getElementById("editFull");
 
-// 页面切换
+// ==================== 默认分类 ====================
+
+const DEFAULT_CATEGORIES = ["唐诗", "宋词", "现代诗", "古风", "散文"];
+
+// ==================== 页面切换 ====================
+
 navButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     navButtons.forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
+
     const target = btn.getAttribute("data-page");
-    pages.forEach((p) => p.classList.remove("active"));
-    document.getElementById(target).classList.add("active");
+
+    pages.forEach((page) => {
+      page.classList.remove("active");
+    });
+
+    const targetPage = document.getElementById(target);
+
+    if (targetPage) {
+      targetPage.classList.add("active");
+    }
   });
 });
 
-// 侧栏切换显示隐藏
-if (toggleSidebarBtn) {
+// ==================== 侧边栏 ====================
+
+if (toggleSidebarBtn && sidebar) {
   toggleSidebarBtn.addEventListener("click", () => {
     sidebar.classList.toggle("hidden");
   });
 }
 
-const colorButtons = document.querySelectorAll(".color-btn");
+// ==================== 主题颜色 ====================
 
-// 隐藏下拉选择框（可选）
 if (themeColorSelect) {
   themeColorSelect.style.display = "none";
 }
 
-// 给颜色按钮绑定事件
 colorButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     const color = btn.style.backgroundColor;
-    // 转成十六进制颜色
     const hexColor = rgbToHex(color);
+
     setThemeColor(hexColor);
+
+    localStorage.setItem("themeColor", hexColor);
+
+    colorButtons.forEach((button) => {
+      button.classList.remove("active");
+    });
+
+    btn.classList.add("active");
   });
 });
 
-// 数据初始化函数
-function initializeApp() {
-  // 从localStorage加载数据并验证
-  try {
-    const savedPoems = localStorage.getItem("poems");
-    if (savedPoems) {
-      poems = JSON.parse(savedPoems);
-      // 验证数据格式是否正确
-      if (!Array.isArray(poems)) {
-        poems = [];
-        throw new Error("Invalid poems data format");
-      }
-    } else {
-      poems = [];
-    }
-    
-    const savedCategories = localStorage.getItem('categories');
-    if (savedCategories) {
-      categories = JSON.parse(savedCategories);
-      if (!Array.isArray(categories)) {
-        categories = ['唐诗', '宋词', '现代诗', '古风', '散文'];
-        throw new Error("Invalid categories data format");
-      }
-    } else {
-      categories = ['唐诗', '宋词', '现代诗', '古风', '散文'];
-    }
-  } catch (error) {
-    console.error("Failed to load data from localStorage:", error);
-    alert("加载数据失败，将使用空数据");
-    poems = [];
-    categories = ['唐诗', '宋词', '现代诗', '古风', '散文'];
-  }
-
-  // 从localStorage加载主题色
-  const savedColor = localStorage.getItem('themeColor');
-  if (savedColor) {
-    setThemeColor(savedColor);
-    // 找到对应的颜色按钮并激活
-    const colorButtons = document.querySelectorAll('.color-btn');
-    colorButtons.forEach(btn => {
-      if (rgbToHex(btn.style.backgroundColor) === savedColor) {
-        btn.classList.add('active');
-      }
-    });
-  } else {
-    // 默认激活第一个颜色按钮
-    const firstColorBtn = document.querySelector('.color-btn');
-    if (firstColorBtn) {
-      firstColorBtn.classList.add('active');
-    }
-  }
-
-  // 初始化UI
-  if (searchInput) {
-    searchInput.value = '';
-  }
-  renderCategoryOptions();
-  renderPoems();
-  renderCategories();
-  renderAuthors();
-  renderAllPoems();
-}
-
-document.addEventListener('DOMContentLoaded', initializeApp);
-
 function shadeColor(color, percent) {
-  // color 是 '#xxxxxx' 格式，percent 是正负数字（改变亮度）
   let R = parseInt(color.substring(1, 3), 16);
   let G = parseInt(color.substring(3, 5), 16);
   let B = parseInt(color.substring(5, 7), 16);
@@ -133,173 +99,283 @@ function shadeColor(color, percent) {
   G = parseInt((G * (100 + percent)) / 100);
   B = parseInt((B * (100 + percent)) / 100);
 
-  R = R < 255 ? R : 255;
-  G = G < 255 ? G : 255;
-  B = B < 255 ? B : 255;
+  R = Math.min(255, Math.max(0, R));
+  G = Math.min(255, Math.max(0, G));
+  B = Math.min(255, Math.max(0, B));
 
-  const RR =
-    R.toString(16).length === 1 ? "0" + R.toString(16) : R.toString(16);
-  const GG =
-    G.toString(16).length === 1 ? "0" + G.toString(16) : G.toString(16);
-  const BB =
-    B.toString(16).length === 1 ? "0" + B.toString(16) : B.toString(16);
+  const RR = R.toString(16).padStart(2, "0");
+  const GG = G.toString(16).padStart(2, "0");
+  const BB = B.toString(16).padStart(2, "0");
 
-  return "#" + RR + GG + BB;
+  return `#${RR}${GG}${BB}`;
+}
+
+function rgbToHex(rgb) {
+  const result = rgb.match(/\d+/g);
+
+  if (!result) {
+    return "#3498db";
+  }
+
+  return (
+    "#" +
+    result
+      .slice(0, 3)
+      .map((x) => parseInt(x).toString(16).padStart(2, "0"))
+      .join("")
+  );
 }
 
 function setThemeColor(color) {
   document.documentElement.style.setProperty("--main-color", color);
+
   document.documentElement.style.setProperty("--header-bg", color);
+
   document.documentElement.style.setProperty("--sidebar-bg", color);
+
   document.documentElement.style.setProperty("--button-bg", color);
+
   document.documentElement.style.setProperty(
     "--button-hover-bg",
     shadeColor(color, -15),
   );
 }
 
-// 辅助函数：把 rgb(52, 152, 219) 转成 #3498db
-function rgbToHex(rgb) {
-  const result = rgb.match(/\d+/g);
-  if (!result) return "#3498db";
-  return (
-    "#" +
-    result
-      .map((x) => {
-        const hex = parseInt(x).toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
-      })
-      .join("")
-  );
+// ==================== 数据初始化 ====================
+
+function initializeApp() {
+  loadPoems();
+  loadCategories();
+  loadTheme();
+
+  if (searchInput) {
+    searchInput.value = "";
+  }
+
+  renderCategoryOptions();
+  renderPoems();
+  renderCategories();
+  renderAuthors();
+  renderAllPoems();
 }
 
-// 新增诗句表单相关
-const toggleAddFormBtn = document.getElementById("toggleAddFormBtn");
-const addPoemForm = document.getElementById("addPoemForm");
-const newCategorySelect = document.getElementById("newCategory");
-const poemList = document.getElementById("poemList");
-const searchInput = document.getElementById("searchInput");
+// ==================== 加载诗句 ====================
 
-// 渲染分类选项
+function loadPoems() {
+  try {
+    const savedPoems = localStorage.getItem("poems");
+
+    if (savedPoems) {
+      const parsedPoems = JSON.parse(savedPoems);
+
+      if (Array.isArray(parsedPoems)) {
+        poems = parsedPoems;
+      } else {
+        poems = [];
+      }
+    } else {
+      poems = [];
+    }
+  } catch (error) {
+    console.error("加载诗句失败：", error);
+    poems = [];
+  }
+}
+
+// ==================== 加载分类 ====================
+
+function loadCategories() {
+  try {
+    const savedCategories = localStorage.getItem("categories");
+
+    if (savedCategories) {
+      const parsedCategories = JSON.parse(savedCategories);
+
+      if (Array.isArray(parsedCategories)) {
+        categories = parsedCategories;
+      } else {
+        categories = [...DEFAULT_CATEGORIES];
+      }
+    } else {
+      categories = [...DEFAULT_CATEGORIES];
+    }
+  } catch (error) {
+    console.error("加载分类失败：", error);
+    categories = [...DEFAULT_CATEGORIES];
+  }
+}
+
+// ==================== 加载主题 ====================
+
+function loadTheme() {
+  const savedColor = localStorage.getItem("themeColor");
+
+  if (savedColor) {
+    setThemeColor(savedColor);
+
+    colorButtons.forEach((btn) => {
+      const btnColor = rgbToHex(btn.style.backgroundColor);
+
+      if (btnColor.toLowerCase() === savedColor.toLowerCase()) {
+        btn.classList.add("active");
+      }
+    });
+  } else {
+    const firstButton = colorButtons[0];
+
+    if (firstButton) {
+      firstButton.classList.add("active");
+
+      const defaultColor = rgbToHex(firstButton.style.backgroundColor);
+
+      setThemeColor(defaultColor);
+    }
+  }
+}
+
+// ==================== 保存数据 ====================
+
+function savePoems() {
+  localStorage.setItem("poems", JSON.stringify(poems));
+}
+
+function saveCategories() {
+  localStorage.setItem("categories", JSON.stringify(categories));
+}
+
+// ==================== 分类选项 ====================
+
 function renderCategoryOptions() {
   if (!newCategorySelect) return;
-  newCategorySelect.innerHTML = "<option disabled selected>请选择分类</option>";
-  categories.forEach((cat) => {
+
+  newCategorySelect.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+
+  defaultOption.value = "";
+  defaultOption.textContent = "请选择分类";
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+
+  newCategorySelect.appendChild(defaultOption);
+
+  categories.forEach((category) => {
     const option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
+
+    option.value = category;
+    option.textContent = category;
+
     newCategorySelect.appendChild(option);
   });
 }
 
-// 渲染诗句列表（首页+搜索）
-function renderPoems() {
+// ==================== 渲染诗句 ====================
+
+function renderPoems(filterCategory = "") {
   if (!poemList) return;
+
   poemList.innerHTML = "";
-  const keyword = searchInput.value.trim().toLowerCase();
-  const filtered = poems.filter(
-    (p) =>
-      p.line.toLowerCase().includes(keyword) ||
-      p.title.toLowerCase().includes(keyword) ||
-      p.author.toLowerCase().includes(keyword),
-  );
+
+  const keyword = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+  const filtered = poems.filter((poem) => {
+    const matchesCategory = !filterCategory || poem.category === filterCategory;
+
+    const matchesSearch =
+      !keyword ||
+      String(poem.line || "")
+        .toLowerCase()
+        .includes(keyword) ||
+      String(poem.title || "")
+        .toLowerCase()
+        .includes(keyword) ||
+      String(poem.author || "")
+        .toLowerCase()
+        .includes(keyword);
+
+    return matchesCategory && matchesSearch;
+  });
+
   if (filtered.length === 0) {
     poemList.innerHTML = "<p>没有找到符合条件的诗句。</p>";
     return;
   }
+
   filtered.forEach((poem) => {
-    const index = poems.findIndex((p) => p.id === poem.id);
+    const index = poems.findIndex((item) => item.id === poem.id);
+
     const card = createPoemCard(poem, index);
+
     poemList.appendChild(card);
   });
 }
 
-// 渲染分类列表（修改后）
-function renderCategories() {
-  const categoryList = document.getElementById("categoryList");
-  if (!categoryList) return;
-  categoryList.innerHTML = "";
-  
-  // 添加"全部"分类
-  const allLi = document.createElement("li");
-  allLi.style.listStyle = "none";
-  allLi.style.margin = "8px 0";
-  allLi.innerHTML = `
-    <button style="width:100%;padding:8px;background:var(--button-bg);color:white;border:none;border-radius:4px;cursor:pointer">
-      全部 (${poems.length})
-    </button>
-  `;
-  allLi.querySelector("button").addEventListener("click", () => {
-    document.querySelector('[data-page="home"]').click();
-    searchInput.value = "";
-    renderPoems();
-  });
-  categoryList.appendChild(allLi);
-  
-  // 添加各个分类
-  categories.forEach((cat) => {
-    const li = document.createElement("li");
-    li.style.listStyle = "none";
-    li.style.margin = "8px 0";
-    li.innerHTML = `
-      <button style="width:100%;padding:8px;background:var(--button-bg);color:white;border:none;border-radius:4px;cursor:pointer">
-        ${cat} (${poems.filter((p) => p.category === cat).length})
-      </button>
-    `;
-    li.querySelector("button").addEventListener("click", () => {
-      document.querySelector('[data-page="home"]').click();
-      searchInput.value = cat;
-      renderPoems();
-    });
-    categoryList.appendChild(li);
-  });
-}
+// ==================== 创建诗句卡片 ====================
 
-// 创建诗句卡片，全文点击展开
 function createPoemCard(poem, index) {
   const card = document.createElement("div");
+
   card.className = "poem-card";
+  card.dataset.id = poem.id;
 
   card.innerHTML = `
-    <div class="poem-line">${poem.line}</div>
-    <div class="poem-title">${poem.title} — ${poem.author}</div>
-    <div class="poem-full">${poem.full}</div>
+    <div class="poem-line">${escapeHTML(poem.line)}</div>
+
+    <div class="poem-title">
+      ${escapeHTML(poem.title)}
+      — 
+      ${escapeHTML(poem.author)}
+    </div>
+
+    <div class="poem-full">
+      ${escapeHTML(poem.full)}
+    </div>
+
     <div class="poem-actions">
       <button class="edit-btn">✏ 修改</button>
       <button class="delete-btn">🗑 删除</button>
     </div>
   `;
 
-  setTimeout(() => {
-    const initialWidth = card.offsetWidth;
-    card.style.width = `${initialWidth}px`;
-  }, 0);
-
-  // 点击“修改”按钮
+  // 修改
   const editBtn = card.querySelector(".edit-btn");
-  editBtn.addEventListener("click", (e) => {
-    e.stopPropagation(); // 防止触发展开全文
-    openEditModal(index); 
-  });
 
-  // 点击“删除”按钮
+  if (editBtn) {
+    editBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openEditModal(index);
+    });
+  }
+
+  // 删除
   const deleteBtn = card.querySelector(".delete-btn");
-  deleteBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    if (confirm("确定删除这条诗句吗？")) {
-      deletePoem(index);
+
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      if (confirm("确定删除这条诗句吗？")) {
+        deletePoem(index);
+      }
+    });
+  }
+
+  // 点击卡片展开全文
+  card.addEventListener("click", (event) => {
+    if (event.target.closest("button")) {
+      return;
     }
-  });
-  // 点击卡片非按钮区域，切换全文展开
-  // 动态计算max-height，实现展开收起动画且内容自适应高度
-  card.addEventListener("click", (e) => {
-    if (e.target.tagName === "BUTTON") return;
+
     const full = card.querySelector(".poem-full");
+
+    if (!full) return;
+
     if (full.classList.contains("expanded")) {
       full.style.maxHeight = "0";
       full.classList.remove("expanded");
     } else {
       full.classList.add("expanded");
+
       full.style.maxHeight = full.scrollHeight + "px";
     }
   });
@@ -307,112 +383,238 @@ function createPoemCard(poem, index) {
   return card;
 }
 
-function formatPoem(text) {
-  return text.replace(/\n/g, "<br>");
+// ==================== 防止用户输入 HTML ====================
+
+function escapeHTML(text) {
+  const div = document.createElement("div");
+
+  div.textContent = text == null ? "" : String(text);
+
+  return div.innerHTML;
 }
 
-// 渲染作者列表
+// ==================== 分类列表 ====================
+
+function renderCategories() {
+  const categoryList = document.getElementById("categoryList");
+
+  if (!categoryList) return;
+
+  categoryList.innerHTML = "";
+
+  // 全部
+  const allLi = document.createElement("li");
+
+  allLi.style.listStyle = "none";
+  allLi.style.margin = "8px 0";
+
+  const allButton = document.createElement("button");
+
+  allButton.textContent = `全部 (${poems.length})`;
+
+  allButton.style.width = "100%";
+
+  allLi.appendChild(allButton);
+
+  allButton.addEventListener("click", () => {
+    goHome();
+
+    if (searchInput) {
+      searchInput.value = "";
+    }
+
+    renderPoems();
+  });
+
+  categoryList.appendChild(allLi);
+
+  // 各分类
+  categories.forEach((category) => {
+    const li = document.createElement("li");
+
+    li.style.listStyle = "none";
+    li.style.margin = "8px 0";
+
+    const button = document.createElement("button");
+
+    const count = poems.filter((poem) => poem.category === category).length;
+
+    button.textContent = `${category} (${count})`;
+
+    button.style.width = "100%";
+
+    li.appendChild(button);
+
+    button.addEventListener("click", () => {
+      goHome();
+
+      if (searchInput) {
+        searchInput.value = "";
+      }
+
+      renderPoems(category);
+    });
+
+    categoryList.appendChild(li);
+  });
+}
+
+// ==================== 回到首页 ====================
+
+function goHome() {
+  const homeButton = document.querySelector('[data-page="home"]');
+
+  if (homeButton) {
+    homeButton.click();
+  }
+}
+
+// ==================== 作者列表 ====================
+
 function renderAuthors() {
   const authorList = document.getElementById("authorList");
+
   if (!authorList) return;
-  
-  // 收集所有作者并去重
-  const authors = [...new Set(poems.map(p => p.author))];
+
   authorList.innerHTML = "";
-  
-  authors.forEach(author => {
-    const count = poems.filter(p => p.author === author).length;
+
+  const authors = [
+    ...new Set(poems.map((poem) => poem.author).filter(Boolean)),
+  ];
+
+  if (authors.length === 0) {
+    authorList.innerHTML = "<p>暂无作者。</p>";
+    return;
+  }
+
+  authors.forEach((author) => {
+    const count = poems.filter((poem) => poem.author === author).length;
+
     const div = document.createElement("div");
+
     div.className = "author-item";
+
     div.innerHTML = `
-      <h3>${author}</h3>
-      <p>作品数量: ${count}</p>
-      <button class="view-author-btn" data-author="${author}">查看作品</button>
+      <h3>${escapeHTML(author)}</h3>
+      <p>作品数量：${count}</p>
+      <button class="view-author-btn">
+        查看作品
+      </button>
     `;
-    
-    // 点击查看作者作品
-    div.querySelector(".view-author-btn").addEventListener("click", () => {
-      document.querySelector('[data-page="home"]').click();
-      searchInput.value = author;
+
+    const viewButton = div.querySelector(".view-author-btn");
+
+    viewButton.addEventListener("click", () => {
+      goHome();
+
+      if (searchInput) {
+        searchInput.value = author;
+      }
+
       renderPoems();
     });
-    
+
     authorList.appendChild(div);
   });
 }
 
-// 渲染全部诗句列表
+// ==================== 全部诗句 ====================
+
 function renderAllPoems() {
   const allPoemList = document.getElementById("allPoemList");
+
   if (!allPoemList) return;
-  
+
   allPoemList.innerHTML = "";
-  
+
   if (poems.length === 0) {
     allPoemList.innerHTML = "<p>暂无诗句</p>";
     return;
   }
-  
-  poems.forEach(poem => {
+
+  poems.forEach((poem) => {
     const div = document.createElement("div");
+
     div.className = "poem-summary";
+
     div.innerHTML = `
-      <h3>${poem.title} - ${poem.author}</h3>
-      <p class="poem-line-preview">${poem.line}</p>
-      <button class="view-full-btn" data-id="${poem.id}">查看全文</button>
+      <h3>
+        ${escapeHTML(poem.title)}
+        -
+        ${escapeHTML(poem.author)}
+      </h3>
+
+      <p class="poem-line-preview">
+        ${escapeHTML(poem.line)}
+      </p>
+
+      <button class="view-full-btn">
+        查看全文
+      </button>
     `;
-    
-    // 点击查看全文
-    div.querySelector(".view-full-btn").addEventListener("click", () => {
-      // 找到对应诗句并展开全文
-      const poemCard = document.querySelector(`.poem-card[data-id="${poem.id}"]`);
-      if (poemCard) {
-        document.querySelector('[data-page="home"]').click();
-        searchInput.value = poem.line;
-        renderPoems();
-        
-        // 延迟后展开全文
-        setTimeout(() => {
-          const fullText = poemCard.querySelector(".poem-full");
-          fullText.classList.add("expanded");
-          fullText.style.maxHeight = fullText.scrollHeight + "px";
-        }, 100);
+
+    const viewButton = div.querySelector(".view-full-btn");
+
+    viewButton.addEventListener("click", () => {
+      goHome();
+
+      if (searchInput) {
+        searchInput.value = "";
       }
+
+      renderPoems();
+
+      setTimeout(() => {
+        const card = document.querySelector(`.poem-card[data-id="${poem.id}"]`);
+
+        if (!card) return;
+
+        const full = card.querySelector(".poem-full");
+
+        if (!full) return;
+
+        full.classList.add("expanded");
+
+        full.style.maxHeight = full.scrollHeight + "px";
+
+        card.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 50);
     });
-    
+
     allPoemList.appendChild(div);
   });
 }
 
-// 添加诗句表单显示切换
+// ==================== 添加诗句表单 ====================
+
 if (toggleAddFormBtn && addPoemForm) {
   toggleAddFormBtn.addEventListener("click", () => {
-    addPoemForm.classList.toggle("active");
-    
-    // 同步修改按钮文字
-    if (addPoemForm.classList.contains("active")) {
+    const isActive = addPoemForm.classList.toggle("active");
+
+    if (isActive) {
       toggleAddFormBtn.textContent = "收起表单";
-      // 展开时设置内边距
-      setTimeout(() => {
-        addPoemForm.style.padding = "20px";
-      }, 10); // 延迟一点确保过渡效果正常
     } else {
       toggleAddFormBtn.textContent = "添加新诗句";
-      // 收起前重置内边距
-      addPoemForm.style.padding = "0";
     }
   });
 }
 
-// 添加新诗句
 if (addPoemForm) {
-  addPoemForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const newLine = document.getElementById("newLine").value.trim();
-    const newTitle = document.getElementById("newTitle").value.trim();
-    const newAuthor = document.getElementById("newAuthor").value.trim();
-    const newCategory = document.getElementById("newCategory").value;
-    const newFull = document.getElementById("newFull").value.trim();
+  addPoemForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const newLine = document.getElementById("newLine")?.value.trim();
+
+    const newTitle = document.getElementById("newTitle")?.value.trim();
+
+    const newAuthor = document.getElementById("newAuthor")?.value.trim();
+
+    const newCategory = document.getElementById("newCategory")?.value;
+
+    const newFull = document.getElementById("newFull")?.value.trim();
 
     if (!newLine || !newTitle || !newAuthor || !newCategory || !newFull) {
       alert("请填写所有字段！");
@@ -420,7 +622,10 @@ if (addPoemForm) {
     }
 
     const newId =
-      poems.length > 0 ? Math.max(...poems.map((p) => p.id)) + 1 : 1;
+      poems.length > 0
+        ? Math.max(...poems.map((poem) => Number(poem.id) || 0)) + 1
+        : 1;
+
     poems.push({
       id: newId,
       line: newLine,
@@ -429,172 +634,324 @@ if (addPoemForm) {
       category: newCategory,
       full: newFull,
     });
-    localStorage.setItem("poems", JSON.stringify(poems));
+
+    savePoems();
 
     renderPoems();
+    renderCategories();
+    renderAuthors();
+    renderAllPoems();
+
     addPoemForm.reset();
     addPoemForm.classList.remove("active");
-    toggleAddFormBtn.textContent = "添加新诗句";
+
+    if (toggleAddFormBtn) {
+      toggleAddFormBtn.textContent = "添加新诗句";
+    }
   });
 }
 
+// ==================== 删除诗句 ====================
+
 function deletePoem(index) {
+  if (index < 0 || index >= poems.length) {
+    return;
+  }
+
   poems.splice(index, 1);
-  localStorage.setItem("poems", JSON.stringify(poems));
-  renderPoems(); // ✅ 改回你实际使用的渲染函数
+
+  savePoems();
+
+  renderPoems();
+  renderCategories();
+  renderAuthors();
+  renderAllPoems();
 }
+
+// ==================== 编辑诗句 ====================
 
 function openEditModal(index) {
   const poem = poems[index];
-  editPoemId.value = poem.id;
-  editLine.value = poem.line;
-  editTitle.value = poem.title;
-  editAuthor.value = poem.author;
-  editFull.value = poem.full;
-  
-  // 只需要调用一次渲染分类选项的函数
+
+  if (!poem || !editPoemModal) {
+    return;
+  }
+
+  if (editPoemId) {
+    editPoemId.value = poem.id;
+  }
+
+  if (editLine) {
+    editLine.value = poem.line || "";
+  }
+
+  if (editTitle) {
+    editTitle.value = poem.title || "";
+  }
+
+  if (editAuthor) {
+    editAuthor.value = poem.author || "";
+  }
+
+  if (editFull) {
+    editFull.value = poem.full || "";
+  }
+
   renderEditCategoryOptions(poem.category);
-  
-  editPoemModal.classList.add('active');
+
+  editPoemModal.classList.add("active");
 }
 
-// 渲染编辑表单中的分类选项
+// ==================== 编辑分类 ====================
+
 function renderEditCategoryOptions(poemCategory) {
   if (!editCategory) return;
-  editCategory.innerHTML = '';
-  categories.forEach(cat => {
-    const option = document.createElement('option');
-    option.value = cat;
-    option.textContent = cat;
-    if (cat === poemCategory) {
+
+  editCategory.innerHTML = "";
+
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+
+    option.value = category;
+    option.textContent = category;
+
+    if (category === poemCategory) {
       option.selected = true;
     }
+
     editCategory.appendChild(option);
   });
 }
 
-closeEditModal.addEventListener('click', () => {
-  editPoemModal.classList.remove('active');
-});
+// ==================== 保存编辑 ====================
 
-editPoemForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const id = parseInt(editPoemId.value);
-  const index = poems.findIndex(p => p.id === id);
-  
-  if (index !== -1) {
-    poems[index] = {
-      ...poems[index],
-      line: editLine.value.trim(),
-      title: editTitle.value.trim(),
-      author: editAuthor.value.trim(),
-      category: editCategory.value,
-      full: editFull.value.trim()
-    };
-    
-    localStorage.setItem('poems', JSON.stringify(poems));
-    renderPoems(); // 重新渲染诗句列表
-    editPoemModal.classList.remove('active'); // 关闭弹窗
-  }
-});
-
-function closeAllModals() {
-  if (categoryModal) categoryModal.classList.remove('active');
-  if (editPoemModal) editPoemModal.classList.remove('active');
+if (closeEditModal) {
+  closeEditModal.addEventListener("click", () => {
+    editPoemModal?.classList.remove("active");
+  });
 }
 
+if (editPoemForm) {
+  editPoemForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const id = parseInt(editPoemId?.value, 10);
+
+    const index = poems.findIndex((poem) => poem.id === id);
+
+    if (index === -1) {
+      return;
+    }
+
+    const line = editLine?.value.trim();
+
+    const title = editTitle?.value.trim();
+
+    const author = editAuthor?.value.trim();
+
+    const full = editFull?.value.trim();
+
+    if (!line || !title || !author || !full) {
+      alert("请填写完整内容！");
+      return;
+    }
+
+    poems[index] = {
+      ...poems[index],
+      line,
+      title,
+      author,
+      category: editCategory?.value || "未分类",
+      full,
+    };
+
+    savePoems();
+
+    renderPoems();
+    renderCategories();
+    renderAuthors();
+    renderAllPoems();
+
+    editPoemModal?.classList.remove("active");
+  });
+}
+
+// ==================== 分类管理 ====================
+
 function renderCurrentCategories() {
-  currentCategories.innerHTML = '';
-  categories.forEach((cat, index) => {
-    const div = document.createElement('div');
-    div.className = 'category-item';
+  if (!currentCategories) return;
+
+  currentCategories.innerHTML = "";
+
+  categories.forEach((category, index) => {
+    const div = document.createElement("div");
+
+    div.className = "category-item";
+
     div.innerHTML = `
-      <span>${cat}</span>
-      <button class="delete-category" data-index="${index}">删除</button>
-    `;
+        <span>${escapeHTML(category)}</span>
+        <button
+          class="delete-category"
+          data-index="${index}"
+        >
+          删除
+        </button>
+      `;
+
     currentCategories.appendChild(div);
   });
 
-  // 绑定删除分类事件
-  document.querySelectorAll('.delete-category').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const index = parseInt(e.target.dataset.index);
-      const catToDelete = categories[index];
-      
-      // 检查是否有诗句使用该分类
-      const hasPoems = poems.some(p => p.category === catToDelete);
-      if (hasPoems && !confirm(`该分类下有${poems.filter(p => p.category === catToDelete).length}条诗句，删除后将移至"未分类"，确定删除吗？`)) {
-        return;
-      }
-      
-      // 更新诗句分类（移至未分类）
-      poems = poems.map(p => 
-        p.category === catToDelete ? { ...p, category: '未分类' } : p
-      );
-      
-      // 删除分类
-      categories.splice(index, 1);
-      localStorage.setItem('categories', JSON.stringify(categories));
-      localStorage.setItem('poems', JSON.stringify(poems));
-      
-      // 重新渲染
-      renderCurrentCategories();
-      renderCategories();
-      renderCategoryOptions();
+  currentCategories.querySelectorAll(".delete-category").forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = parseInt(button.dataset.index, 10);
+
+      deleteCategory(index);
     });
   });
 }
 
-// 添加新分类
-addCategoryForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const newCat = newCategoryName.value.trim();
-  
-  if (!newCat) {
-    alert('请输入分类名称');
+// ==================== 删除分类 ====================
+
+function deleteCategory(index) {
+  if (index < 0 || index >= categories.length) {
     return;
   }
-  
-  if (categories.includes(newCat)) {
-    alert('该分类已存在');
-    return;
+
+  const category = categories[index];
+
+  const relatedPoems = poems.filter((poem) => poem.category === category);
+
+  if (relatedPoems.length > 0) {
+    const confirmed = confirm(
+      `该分类下有 ${relatedPoems.length} 条诗句，删除后将移至“未分类”，确定删除吗？`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    poems = poems.map((poem) => {
+      if (poem.category === category) {
+        return {
+          ...poem,
+          category: "未分类",
+        };
+      }
+
+      return poem;
+    });
   }
-  
-  categories.push(newCat);
-  localStorage.setItem('categories', JSON.stringify(categories));
-  
-  // 重新渲染相关UI
-  newCategoryName.value = '';
+
+  categories.splice(index, 1);
+
+  // 如果删除后还没有“未分类”，
+  // 且确实有诗句被移动过去，就加入分类
+  if (relatedPoems.length > 0 && !categories.includes("未分类")) {
+    categories.push("未分类");
+  }
+
+  saveCategories();
+  savePoems();
+
   renderCurrentCategories();
   renderCategories();
   renderCategoryOptions();
-  // 如果编辑模态框打开，也更新其分类选项
-  if (editPoemModal.classList.contains('active')) {
-    renderEditCategoryOptions(editCategory.value);
+  renderAuthors();
+  renderAllPoems();
+
+  if (editPoemModal?.classList.contains("active")) {
+    renderEditCategoryOptions(editCategory?.value);
+  }
+}
+
+// ==================== 添加分类 ====================
+
+if (addCategoryForm) {
+  addCategoryForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const newCategory = newCategoryName?.value.trim();
+
+    if (!newCategory) {
+      alert("请输入分类名称");
+      return;
+    }
+
+    if (categories.includes(newCategory)) {
+      alert("该分类已存在");
+      return;
+    }
+
+    categories.push(newCategory);
+
+    saveCategories();
+
+    if (newCategoryName) {
+      newCategoryName.value = "";
+    }
+
+    renderCurrentCategories();
+    renderCategories();
+    renderCategoryOptions();
+
+    if (editPoemModal?.classList.contains("active")) {
+      const currentValue = editCategory?.value;
+
+      renderEditCategoryOptions(currentValue);
+    }
+  });
+}
+
+// ==================== 打开分类管理 ====================
+
+if (manageCategoriesBtn) {
+  manageCategoriesBtn.addEventListener("click", () => {
+    categoryModal?.classList.add("active");
+
+    renderCurrentCategories();
+  });
+}
+
+// ==================== 关闭分类管理 ====================
+
+if (closeModalBtn) {
+  closeModalBtn.addEventListener("click", () => {
+    categoryModal?.classList.remove("active");
+  });
+}
+
+// ==================== 关闭所有弹窗 ====================
+
+function closeAllModals() {
+  categoryModal?.classList.remove("active");
+
+  editPoemModal?.classList.remove("active");
+}
+
+// ==================== 点击背景关闭 ====================
+
+document.addEventListener("click", (event) => {
+  if (event.target === categoryModal || event.target === editPoemModal) {
+    closeAllModals();
   }
 });
 
-// 打开分类管理弹窗
-manageCategoriesBtn.addEventListener('click', () => {
-  categoryModal.classList.add('active');
-  renderCurrentCategories(); // 渲染当前分类列表
+// ==================== ESC关闭 ====================
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeAllModals();
+  }
 });
 
-// 关闭分类管理弹窗
-closeModalBtn.addEventListener('click', () => {
-  categoryModal.classList.remove('active');
-});
+// ==================== 搜索 ====================
 
-document.addEventListener('click', (e) => {
-  if (e.target === categoryModal) closeAllModals();
-  if (e.target === editPoemModal) closeAllModals();
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeAllModals();
-});
-
-// 搜索监听
 if (searchInput) {
-  searchInput.addEventListener("input", renderPoems);
+  searchInput.addEventListener("input", () => {
+    renderPoems();
+  });
 }
+
+// ==================== 页面加载 ====================
+
+document.addEventListener("DOMContentLoaded", initializeApp);
